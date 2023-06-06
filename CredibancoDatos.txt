@@ -1,0 +1,39 @@
+spring.datasource.password=Capacita123$
+spring.datasource.username=capacitacion
+spring.datasource.driver-class-name=oracle.jdbc.OracleDriver
+spring.jpa.properties.hibernate.default_schema=capacitacion
+spring.datasource.url=jdbc:oracle:thin:@172.27.1.237:1191:PRORA19
+spring.jpa.database-platform=org.hibernate.dialect.Oracle12cDialect
+
+
+<dependency>
+<groupId>org.modelmapper</groupId>
+<artifactId>modelmapper</artifactId>
+<version>3.0.0</version>
+</dependency>
+
+
+<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
+<dependency>
+<groupId>com.fasterxml.jackson.core</groupId>
+<artifactId>jackson-databind</artifactId>
+<version>2.14.2</version>
+</dependency>
+
+
+headers.setContentType(MediaType.APPLICATION_JSON);
+headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+
+
+
+
+
+headers.add("Content-Type","Application/json");
+headers.add("Accept","Application/json");
+consumes=MediaType.APPLICATION_JSON_VALUE, produces=MediaType.APPLICATION_JSON_VALUE
+
+
+Apache-maven-3.8.4
+
+
+mvn clean install
