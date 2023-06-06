@@ -1,0 +1,42 @@
+QA
+
+DEFINICIONES (ISTQB)
+
+Error (Accion humana)
+
+
+Defecto (El componente falla) 
+
+
+Fallo (Manifestacion funcionL)
+
+calidad: satisface los requisitos
+Calidad software
+
+Tipos de aseguramiento: constructivas y analiticas
+caja blanca:si se mira el detalle de todo, pruebas con el codigo
+caja negra:prueba del resultado final no importa el desarrollo
+1. Requerimientos
+2. Diseño alto nivel
+3. Diseño bajo nnivel
+4.Desarrollo del codigo
+Pruebas funcionales
+
+Pruebas unitarias: lo que el hizo funcione, funciono o no (Desarrollador) 
+Pruebas de integracion: Ciclo (front, back) pruebas de todo
+Pruebas de sstema: Lo que el cliente pidio se este cumpliendo
+QA: integracion
+Pruebas regresivas: Validar que lo que venia funcionando siga funcionando
+
+METODOLOGIA ISTQB
+-Presencia de defectos; puede que hayan
+-Pruebas exautuvas no existen;validar que no se vuelvan  apresentar los fallos
+-Pruebas temoranas; desde el comienxo, identificar errores al comienxo
+-Agrupamiento de defectos; cucarachas
+-Falacias de los errores: no puede asegurar que todo esta al 100
+pensar como el cliente
+que se hizo?
+que impacta
+que se quedo por fuera
+en donde puede haber problema
+fechas para el inicio de las pruebas
