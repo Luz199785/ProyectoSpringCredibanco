@@ -1,0 +1,8 @@
+DTO y ENTITY = agregar el atributo cardnumber en el controller = se crean 3 metodos
+
+ 
+
+
+    2) crea el metodo que envia la crdNumber, pero del num3 al num8 los envia como ****, los demas si normales y a la DB
+
+    3) metodo que envia la password cifrada (base64)  a la DB en dependencies se crea un paquete UTILS que contiene la logica para cada uno de los metodos
