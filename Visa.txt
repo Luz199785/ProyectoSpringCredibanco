@@ -1,0 +1,20 @@
+
+Logica de negocio
+AS 400 Producción
+
+VISA Bussines news
+generacion de liquidación en : Adquiriente y emisor; se le paga al emisor y se le debita al adquirente
+
+-Tarifa intercambiaria
+-Entidad y liquidación mcc cambia segun por donde se haga la transaccion
+-MCC->venta presente y venta no poresente(multi por 1.90) (visa clasic, goal, pago) parametrizaciones en as 400 el BIN dice a que producto corresponde BBA->Visa hay un numero que es asignado por visa
+valor de la compra por el iva 
+comercio estrategico
+BIN 6 dijitos (se espera 8 dijitos)
+tarifas mas altas a clientes estrategicos
+-informacion smart vista
+-valor de intercambio
+-valor de deposito = 0, y no todas las entidades tienen un trato con credibanCo 
+valor de adquirencia
+BIN credito
+Bin debito
