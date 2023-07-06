@@ -1,0 +1,23 @@
+QCLESRC
+-> Encontrar (VYF0500AN)
+------------------------------------------
+para buscar todos los objetos
+wrkobj *all/VYC0800 
+------------------------------------------
+para validar el tipo del programa
+dsppgm basedos/VYC0800
+dsppgm basedos/VYR0858
+------------------------------------------
+VER SPOOL IMPRIMIR->6
+WRKSPLF
+------------------------------------------
+MIRAR LOS ARCHIVOS LOGICOS
+DSPFD FILE(Electron/celo500d)
+------------------------------------------
+CRTL + (FILAS EXCEL)
+-------------------------------------------
+TESTQA MIRAR LA FECHA EN PRODUCCIÓN
+DSPGMGM BASEDOS/VYC0800B
+VISUALIZAR CON 5
+-------------------------------------------
+SHIFT ESC 1->DOS SESIONES
