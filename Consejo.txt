@@ -1,0 +1,46 @@
+Establece metas claras: Define metas específicas y alcanzables para tu aprendizaje. Esto te ayudará a mantener la motivación y a enfocarte en lo que realmente quieres lograr.
+
+Organiza tu tiempo: Planifica tu tiempo de estudio de manera eficiente. Crea un horario regular y asegúrate de dedicar suficiente tiempo a cada asignatura o tema.
+
+Utiliza diversos recursos de aprendizaje: No te limites a un solo libro de texto o material. Explora diferentes recursos, como libros, videos, tutoriales en línea, cursos, etc. Esto te brindará diferentes perspectivas y enfoques para comprender mejor los conceptos.
+
+Practica regularmente: La práctica es clave para el aprendizaje efectivo. Realiza ejercicios, resuelve problemas y aplica lo que has aprendido en situaciones prácticas. Cuanto más practiques, mejor será tu dominio del tema.
+
+Busca comprensión en lugar de memorización: En lugar de simplemente memorizar información, esfuérzate por comprender los conceptos subyacentes. Trata de explicar lo que has aprendido en tus propias palabras y realiza conexiones con conocimientos previos.
+
+Haz preguntas y participa activamente: Si algo no está claro, no dudes en hacer preguntas. Participa en clase, grupos de estudio o foros en línea para discutir y compartir ideas con otros estudiantes. La interacción activa te ayudará a fortalecer tu comprensión.
+
+Establece un ambiente propicio para el estudio: Crea un espacio de estudio tranquilo y libre de distracciones. Asegúrate de tener los materiales necesarios a tu alcance y minimiza las interrupciones durante tu tiempo de estudio.
+
+Busca retroalimentación: Obtén comentarios sobre tu progreso. Pide a tus profesores o compañeros de clase que revisen tu trabajo y te brinden sugerencias para mejorar. La retroalimentación constructiva te ayudará a corregir errores y a mejorar tus habilidades.
+
+Mantén una actitud positiva: El aprendizaje puede ser desafiante, pero mantén una mentalidad positiva. Afronta los desafíos con determinación y no te desanimes por los errores. Cada error es una oportunidad de aprendizaje.
+
+Descansa y equilibra tu vida: No olvides cuidar de ti mismo. Descansa lo suficiente, mantén una alimentación saludable y equilibra tu tiempo de estudio con actividades recreativas. Un buen equilibrio te ayudará a mantener la concentración y el bienestar general.
+
+Recuerda, el aprendizaje efectivo requiere constancia, esfuerzo y compromiso. ¡Mucho éxito en tus estudios!
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+AS 400
+
+1.Conocimiento del sistema operativo: Familiarízate con el sistema operativo IBM i y su estructura. 
+Aprende sobre los conceptos clave, como bibliotecas, objetos, archivos, programas, comandos y trabajos. 
+Comprender cómo funciona el sistema operativo te ayudará a utilizarlo de manera más efectiva.
+
+2. Lenguajes de programación: Además de RPG, es beneficioso aprender otros lenguajes de programación compatibles con IBM i, como CL (Control Language) y SQL (Structured Query Language). 
+Dominar múltiples lenguajes te permitirá desarrollar soluciones más completas y aprovechar al máximo la plataforma.
+
+3. Herramientas de desarrollo: Familiarízate con las herramientas de desarrollo disponibles en IBM i, como SEU (Source Entry Utility) para editar código fuente,
+ PDM (Program Development Manager) para gestionar bibliotecas y objetos, y RSE (Remote System Explorer) para desarrollo en entorno Eclipse. 
+Estas herramientas te ayudarán a crear, editar y mantener tus programas y recursos en el sistema.
+
+4. Administración del sistema: Si deseas ser competente en AS/400, es útil aprender sobre la administración del sistema.
+ Esto incluye tareas como la creación y gestión de usuarios, la configuración de permisos de seguridad, la supervisión del rendimiento del sistema y la solución de problemas comunes. 
+Comprender cómo administrar y mantener el sistema es esencial para un buen desempeño y disponibilidad.
+
+5.Conocimiento de bases de datos: IBM i utiliza el sistema de base de datos relacional DB2 como su motor de base de datos predeterminado. Aprender sobre los conceptos de bases de datos, 
+consultas SQL y diseño de tablas te permitirá interactuar de manera efectiva con los datos almacenados en el sistema.
+
+6. Práctica y experiencia: La práctica es fundamental para mejorar tus habilidades en AS/400. Trabaja en proyectos reales, resuelve problemas, experimenta con diferentes escenarios 
+y busca oportunidades para aplicar tus conocimientos en un entorno de trabajo. La experiencia práctica te permitirá adquirir confianza y desarrollar habilidades sólidas en la plataforma.
+
