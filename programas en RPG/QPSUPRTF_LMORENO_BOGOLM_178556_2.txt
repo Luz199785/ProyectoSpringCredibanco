@@ -1,0 +1,113 @@
+  5770WDS V7R2M0  140418                  LISTADO FUENTE SEU                            17/07/23 09:36:36    DESANEW      PÁG.    1
+  ARCHIVO FUENTE  . . . . .  DAM/TESTDAM
+  MIEMBRO . . . . . . . . .  VALCOMPRA
+  SEQNBR*...+... 1 ...+... 2 ...+... 3 ...+... 4 ...+... 5 ...+... 6 ...+... 7 ...+... 8 ...+... 9 ...+... 0
+    100      F********************************************************************                                      04/09/96
+    200      F*                                                                  *                                      04/09/96
+    300      F*PROGRAMA DE PRUEBA DIEGO MORENO                                  *                                       14/07/23
+    400      F********************************************************************                                      04/09/96
+    500      F*                                                                  *                                      12/07/23
+    600      FESFBASIC  IF   E           K DISK                                                                         14/07/23
+    700      FCEF0500A  UF   E           K DISK                                                                         12/07/23
+    800      FESF0810C  IF   E           K DISK                                                                         12/07/23
+    900      FAUDIT     O    E             DISK                                                                         14/07/23
+   1000      F*                                                                  *                                      12/07/23
+   1100      DPORDTNUE         S              4S 2                                                                      14/07/23
+   1200      DVALDTNUE         S             15S 0                                                                      14/07/23
+   1300      DVALTONUE         S             15S 0                                                                      14/07/23
+   1400      DPORDTANT         S              4S 2                                                                      14/07/23
+   1500      DVALDTANT         S             15S 0                                                                      14/07/23
+   1600      DVALTOANT         S             15S 0                                                                      14/07/23
+   1700      DNOCODIG          S              1S 0                                                                      14/07/23
+   1800      C*                                                                                                         14/05/02
+   1900      C********************************************************************                                      14/07/23
+   2000      C*                Inicio del programa                               *                                      14/07/23
+   2100      C********************************************************************                                      14/07/23
+   2200      C                                                                                                          14/07/23
+   2300      C                   Z-ADD     0             PORDTANT                                                       14/07/23
+   2400      C                   Z-ADD     0             VALDTANT                                                       14/07/23
+   2500      C                   Z-ADD     0             VALTOANT                                                       14/07/23
+   2600      C                   Z-ADD     0             PORDTNUE                                                       14/07/23
+   2700      C                   Z-ADD     0             VALDTNUE                                                       14/07/23
+   2800      C                   Z-ADD     0             VALTONUE                                                       14/07/23
+   2900      C                   Z-ADD     0             NOCODIG                                                        14/07/23
+   3000      C                   DO                                                                                     14/07/23
+   3100      C                   READ      CEF0500A                             01                                      14/07/23
+   3200      C     *IN01         IFEQ      '0'                                                                          14/07/23
+   3300      C                   MOVE      DCODES        MCODES                                                         14/07/23
+   3400      C     MCODES        CHAIN     ESFBASIC                             02                                      14/07/23
+   3500      C     *IN02         IFEQ      '0'                                                                          14/07/23
+   3600      C                   MOVE      MCODES        CCODES                 03                                      14/07/23
+   3700      C     CCODES        CHAIN     ESF0810C                                                                     14/07/23
+   3800      C     *IN03         IFEQ      '0'                                                                          14/07/23
+   3900      C                   Z-ADD     DPORDT        PORDTANT                                                       14/07/23
+   4000      C                   Z-ADD     DVALDE        VALDTANT                                                       14/07/23
+   4100      C                   Z-ADD     DVALCO        VALTOANT                                                       14/07/23
+   4200      C                                                                                                          14/07/23
+   4300      C                   ELSE                                                                                   14/07/23
+   4400      C                   Z-ADD     1             NOCODIG                                                        14/07/23
+   4500      C                   ENDIF                                                                                  14/07/23
+   4600      C                   ENDIF                                                                                  14/07/23
+   4700      C                   ENDIF                                                                                  14/07/23
+   4800      C                   EXSR      VALDES                                                                       14/07/23
+   4900      C                   EXSR      VALTOT                                                                       14/07/23
+   5000      C                   EXSR      WRTAUD                                                                       14/07/23
+   5100      C                   EXSR      UPDCEF                                                                       14/07/23
+   5200      C                                                                                                          14/07/23
+   5300      C                   ENDDO                                                                                  14/07/23
+  5770WDS V7R2M0  140418                  LISTADO FUENTE SEU                            17/07/23 09:36:36    DESANEW      PÁG.    2
+  ARCHIVO FUENTE  . . . . .  DAM/TESTDAM
+  MIEMBRO . . . . . . . . .  VALCOMPRA
+  SEQNBR*...+... 1 ...+... 2 ...+... 3 ...+... 4 ...+... 5 ...+... 6 ...+... 7 ...+... 8 ...+... 9 ...+... 0
+   5400      C                   MOVE      '01'          *INLR                                                          14/07/23
+   5500      C                                                                                                          14/07/23
+   5600      C**************************************************************************                                14/07/23
+   5700      C*      CALCULO VALOR DE DESCUENTO (% DEVALOR NETO COMPRA)                *                                14/07/23
+   5800      C**************************************************************************                                14/07/23
+   5900      C     VALDES        BEGSR                                                                                  14/07/23
+   6000      C     NOCODIG       IFEQ      0                                                                            14/07/23
+   6100      C     DVALDE        IFEQ      0                                                                            14/07/23
+   6200      C                   Z-ADD     3             PORDTNUE                                                       14/07/23
+   6300      C                   ENDIF                                                                                  14/07/23
+   6400      C                   ELSE                                                                                   14/07/23
+   6500      C                   Z-ADD     5             PORDTNUE                                                       14/07/23
+   6600      C     PORDTNUE      DIV       100           PORDTNUE                                                       14/07/23
+   6700      C                                                                                                          14/07/23
+   6800      C                                                                                                          14/07/23
+   6900      C     PORDTNUE      MULT      VALTOANT      VALDTNUE                                                       14/07/23
+   7000      C                                                                                                          14/07/23
+   7100      C                   ENDIF                                                                                  14/07/23
+   7200      C                   ENDSR                                                                                  14/07/23
+   7300      C                                                                                                          14/07/23
+   7400      C**************************************************************************                                14/07/23
+   7500      C*    CALCULO TOTAL COMPRA (VALOR TOTAL - VALOR DESCUENTO)                *                                14/07/23
+   7600      C**************************************************************************                                14/07/23
+   7700      C     VALTOT        BEGSR                                                                                  14/07/23
+   7800      C     VALTOANT      SUB       VALDTNUE      VALTONUE                                                       14/07/23
+   7900      C                   ENDSR                                                                                  14/07/23
+   8000      C                                                                                                          14/07/23
+   8100      C**************************************************************************                                14/07/23
+   8200      C*    ESCRIBE EN ARCHIVO DE AUDITORIA                                     *                                14/07/23
+   8300      C**************************************************************************                                14/07/23
+   8400      C     WRTAUD        BEGSR                                                                                  14/07/23
+   8500      C                   Z-ADD     PORDTANT      PORANT                                                         14/07/23
+   8600      C                   Z-ADD     VALDTANT      DESANT                                                         14/07/23
+   8700      C                   Z-ADD     VALTOANT      VALANT                                                         14/07/23
+   8800      C                   Z-ADD     PORDTNUE      PORNUE                                                         14/07/23
+   8900      C                   Z-ADD     VALDTNUE      DESNUE                                                         14/07/23
+   9000      C                   Z-ADD     VALTONUE      VALNUE                                                         14/07/23
+   9100      C                   WRITE     AUDITR                                                                       14/07/23
+   9200      C                   ENDSR                                                                                  14/07/23
+   9300      C                                                                                                          14/07/23
+   9400      C**************************************************************************                                14/07/23
+   9500      C*    ACTUALIZA ARCHIVO CEF05A00                                          *                                14/07/23
+   9600      C**************************************************************************                                14/07/23
+   9700      C     UPDCEF        BEGSR                                                                                  14/07/23
+   9800      C                   Z-ADD     PORDTNUE      DPORDT                                                         14/07/23
+   9900      C                   Z-ADD     VALDTNUE      DVALDE                                                         14/07/23
+  10000      C                   Z-ADD     VALTONUE      DVALTO                                                         14/07/23
+  10100      C                   UPDATE    CER0500A                                                                     14/07/23
+  10200      C                   CLOSE     CEF0500A                                                                     14/07/23
+  10300      C                   ENDSR                                                                                  14/07/23
+  10400      C*                                                                                                         04/09/96
+                                  * * * *  F I N  D E  F U E N T E  * * * *
