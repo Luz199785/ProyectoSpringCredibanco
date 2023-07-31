@@ -1,4 +1,4 @@
-  5770WDS V7R2M0  140418                  LISTADO FUENTE SEU                            26/07/23 10:17:33    DESANEW      PÁG.    1
+  5770WDS V7R2M0  140418                  LISTADO FUENTE SEU                            31/07/23 11:26:21    DESANEW      PÁG.    1
   ARCHIVO FUENTE  . . . . .  LMORENO/QRPGLESRC
   MIEMBRO . . . . . . . . .  PGM001
   SEQNBR*...+... 1 ...+... 2 ...+... 3 ...+... 4 ...+... 5 ...+... 6 ...+... 7 ...+... 8 ...+... 9 ...+... 0
@@ -10,7 +10,7 @@
     600      FESFBASIC  IF   E           K DISK                                                                         25/07/23
     700      FCEF0500A  UF   E           K DISK                                                                         12/07/23
     800      FESF0810C  IF   E           K DISK                                                                         12/07/23
-    900      FAUDITORIA1O    E           K DISK                                                                         12/07/23
+    900      FAUDITORIA1O    E           K DISK                                                                         31/07/23
    1000      F*                                                                  *                                      12/07/23
    1100      C*                                                                                                         14/05/02
    1200      C*                -----------------------                                                                  04/09/96
@@ -28,25 +28,42 @@
    2400      C*                                                                                                         19/07/23
    2500      C     MCODES        CHAIN     ESR0810C                           47                                        25/07/23
    2600      C                   IF        *IN47 ='0'                                                                   25/07/23
-   2700      C                   IF        DPORDT > 0                                                                   25/07/23
-   2800      C                   EVAL      DVALDE = DVALCO * DPORDT / 100                                               25/07/23
-   2900      C                   ELSE                                                                                   25/07/23
-   3000      C                   EVAL      DVALDE = 0,03 * DVALCO                                                       25/07/23
-   3100      C                   ENDIF                                                                                  25/07/23
-   3200      C                   EVAL      DVALTO = DVALCO - DVALDE                                                     25/07/23
-   3300      C                   ELSE                                                                                   25/07/23
-   3400      C                   EVAL      DVALDE = 0,05 * DVALCO                                                       25/07/23
-   3500      C                   EVAL      DVALTO = DVALCO - DVALDE                                                     25/07/23
+   2700      C                   MOVE      DVALDE        OVRDESC                                                        31/07/23
+   2800      C                   MOVE      DPORDT        OPDESC                                                         31/07/23
+   2900      C                   IF        DPORDT > 0                                                                   25/07/23
+   3000      C                   EVAL      DVALDE = DVALCO * DPORDT / 100                                               25/07/23
+   3100      C                   MOVE      DPORDT        CPDESC                                                         31/07/23
+   3200      C                   ELSE                                                                                   25/07/23
+   3300      C                   EVAL      DVALDE = 0,03 * DVALCO                                                       25/07/23
+   3400      C                   EVAL      CPDESC = 0,03 * 100                                                          31/07/23
+   3500      C                   EVAL      DPORDT = 0,03 * 100                                                          31/07/23
    3600      C                   ENDIF                                                                                  25/07/23
-   3700      C                   UPDATE    CER0500A                                                                     25/07/23
-   3800      C                   ENDIF                                                                                  25/07/23
-   3900      C                                                                                                          25/07/23
-   4000      C                                                                                                          25/07/23
-   4100      C                   READ      CER0500A                               45                                    25/07/23
-   4200      C                   ENDDO                                                                                  25/07/23
-   4300      C*                                                                                                         19/07/23
-   4400      C*                                                                                                         25/07/23
-   4500      C                                                                                                          25/07/23
-   4600      C                   ENDSR                                                                                  18/07/23
-   4700      C*                                                                                                         04/09/96
+   3700      C                   EVAL      DVALTO = DVALCO - DVALDE                                                     25/07/23
+   3800      C                   ELSE                                                                                   25/07/23
+   3900      C                   EVAL      DVALDE = 0,05 * DVALCO                                                       25/07/23
+   4000      C                   EVAL      CPDESC = 0,05 * 100                                                          31/07/23
+   4100      C                   EVAL      DPORDT = 0,05 * 100                                                          31/07/23
+   4200      C                   EVAL      DVALTO = DVALCO - DVALDE                                                     25/07/23
+   4300      C                   ENDIF                                                                                  25/07/23
+   4400      C                   MOVE      DVALDE        CVRDESC                                                        31/07/23
+   4500      C                   MOVE      DVALCO        OCOMPNET                                                       31/07/23
+   4600      C                   EXSR      AUDIT                                                                        31/07/23
+   4700      C                   UPDATE    CER0500A                                                                     25/07/23
+   4800      C                   ENDIF                                                                                  25/07/23
+   4900      C                                                                                                          25/07/23
+   5000      C                                                                                                          25/07/23
+   5100      C                   READ      CER0500A                               45                                    25/07/23
+   5200      C                   ENDDO                                                                                  25/07/23
+   5300      C*                                                                                                         19/07/23
+  5770WDS V7R2M0  140418                  LISTADO FUENTE SEU                            31/07/23 11:26:21    DESANEW      PÁG.    2
+  ARCHIVO FUENTE  . . . . .  LMORENO/QRPGLESRC
+  MIEMBRO . . . . . . . . .  PGM001
+  SEQNBR*...+... 1 ...+... 2 ...+... 3 ...+... 4 ...+... 5 ...+... 6 ...+... 7 ...+... 8 ...+... 9 ...+... 0
+   5400      C*                                                                                                         25/07/23
+   5500      C                                                                                                          25/07/23
+   5600      C                   ENDSR                                                                                  18/07/23
+   5700      C*                                                                                                         04/09/96
+   5800      C     AUDIT         BEGSR                                                                                  31/07/23
+   5900      C                   WRITE     REGIAUDI                                                                     31/07/23
+   6000      C                   ENDSR                                                                                  31/07/23
                                   * * * *  F I N  D E  F U E N T E  * * * *
