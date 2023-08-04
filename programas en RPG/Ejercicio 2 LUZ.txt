@@ -1,0 +1,98 @@
+  5770WDS V7R2M0  140418                  LISTADO FUENTE SEU                            04/08/23 15:42:12    DESANEW      PÁG.    1
+  ARCHIVO FUENTE  . . . . .  LMORENO/QRPGLESRC
+  MIEMBRO . . . . . . . . .  PGM002
+  SEQNBR*...+... 1 ...+... 2 ...+... 3 ...+... 4 ...+... 5 ...+... 6 ...+... 7 ...+... 8 ...+... 9 ...+... 0
+    100      F********************************************************************                                      04/09/96
+    200      F*                                                                  *                                      04/09/96
+    300      F*PROGRAMA DE PRUEBA NUMERO DOS                                    *                                       31/07/23
+    400      F********************************************************************                                      04/09/96
+    500      F*                                                                  *                                      12/07/23
+    600      FCAFCNTPH  IF   E           K DISK                                                                         31/07/23
+    700      FSWFTAB08  IF   E           K DISK                                                                         04/08/23
+    800      FACTIVIDAD2O    E             DISK                                                                         04/08/23
+    900      F*                                                                  *                                      12/07/23
+   1000      DWNUMTAR          S              6                                                                         01/08/23
+   1100      DWSYSDT           S               D   INZ(D'1961-02-25') DATFMT(*ISO)                                      04/08/23
+   1200      DWSYSTM           S               T   INZ(T'17.05.06')                                                     04/08/23
+   1300      D*-------------------------------------------------                                                        04/08/23
+   1400      D* VARIABLES PARA ENCONTRAR REGISTROS ENCONTRADOS                                                          04/08/23
+   1500      D*-------------------------------------------------                                                        04/08/23
+   1600      DSIenc            S             10  0                                                                      04/08/23
+   1700      DNOenc            S             10  0                                                                      04/08/23
+   1800      D*                                                                                                         01/08/23
+   1900      D WTARJ16         DS                                                                                       01/08/23
+   2000      D  WTAR6                  1      6  0                                                                      01/08/23
+   2100      D  WTAR11                11     11  0                                                                      01/08/23
+   2200      D  WTAR10                 7     16  0                                                                      01/08/23
+   2300      C*---------------------------                                                                              04/08/23
+   2400      D* ---> fechas                                                                                             04/08/23
+   2500      D*---------------------------                                                                              04/08/23
+   2600      DDSHORA           DS                                                                                       04/08/23
+   2700      D WHHORA                  1      2  0                                                                      04/08/23
+   2800      D WMHORA                  4      5  0                                                                      04/08/23
+   2900      D WSHORA                  7      8  0                                                                      04/08/23
+   3000      DDSHORA2          DS                                                                                       04/08/23
+   3100      D WHHORA2                 1      2  0                                                                      04/08/23
+   3200      D WMHORA2                 3      4  0                                                                      04/08/23
+   3300      D WSHORA2                 5      6  0                                                                      04/08/23
+   3400      D WHORA                   1      6  0                                                                      04/08/23
+   3500      DDSFHFIN          DS                                                                                       04/08/23
+   3600      D WAAFIN                  1      4  0                                                                      04/08/23
+   3700      D WMMFIN                  5      6  0                                                                      04/08/23
+   3800      D WDDFIN                  7      8  0                                                                      04/08/23
+   3900      D WFECHA                  1      8  0                                                                      04/08/23
+   4000      D                                                                                                          04/08/23
+   4100      C*                -----------------------                                                                  04/09/96
+   4200      C*         ---> Inicio del programa                                                                        17/07/23
+   4300      C*                -----------------------                                                                  04/09/96
+   4400      C                   TIME                    WSYSTM                                                         03/08/23
+   4500      C                   MOVE      WSYSTM        DSHORA                                                         04/08/23
+   4600      C                   MOVE      WHHORA        WHHORA2                                                        04/08/23
+   4700      C                   MOVE      WMHORA        WMHORA2                                                        04/08/23
+   4800      C                   MOVE      WSHORA        WSHORA2                                                        04/08/23
+   4900      C                   MOVEL     *DATE         WSYSDT                                                         04/08/23
+   5000      C                   EXTRCT    WSYSDT:*Y     WAAFIN                                                         04/08/23
+   5100      C                   EXTRCT    WSYSDT:*M     WMMFIN                                                         04/08/23
+   5200      C                   EXTRCT    WSYSDT:*D     WDDFIN                                                         04/08/23
+   5300      C                   MOVE      *ZEROS        SIENC                                                          04/08/23
+  5770WDS V7R2M0  140418                  LISTADO FUENTE SEU                            04/08/23 15:42:12    DESANEW      PÁG.    2
+  ARCHIVO FUENTE  . . . . .  LMORENO/QRPGLESRC
+  MIEMBRO . . . . . . . . .  PGM002
+  SEQNBR*...+... 1 ...+... 2 ...+... 3 ...+... 4 ...+... 5 ...+... 6 ...+... 7 ...+... 8 ...+... 9 ...+... 0
+   5400      C                   MOVE      *ZEROS        NOENC                                                          04/08/23
+   5500      C                   EXSR      PCSPGM                                                                       04/09/96
+   5600      C                   Eval      *InLr = *On                                                                  17/07/23
+   5700      C*                                                                                                         04/09/96
+   5800      C     PCSPGM        BEGSR                                                                                  18/07/23
+   5900      C*                                                                                                         04/09/96
+   6000      C                   READ      CAR0760E                               45                                    04/08/23
+   6100      C     *IN45         DOWEQ     '0'                                                                          18/07/23
+   6200      C                   MOVEL     DCDTHJ        WTARJ16                                                        04/08/23
+   6300      C     WTAR6         CHAIN     SWRTAB08                           46                                        04/08/23
+   6400      C                   IF        *IN46 ='0'                                                                   25/07/23
+   6500      C                   MOVE      WFECHA        FECHA                                                          04/08/23
+   6600      C                   MOVE      WHORA         HORAPRO                                                        04/08/23
+   6700      C                   MOVEL     DCDTHJ        NUMTARA                                                        04/08/23
+   6800      C                   MOVE      WTAR6         NUMBINA                                                        04/08/23
+   6900      C                   MOVE      RNOBIN        NOMBINA                                                        04/08/23
+   7000      C                   EVAL      SIenc = SIenc + 1                                                            04/08/23
+   7100      C                   ELSE                                                                                   25/07/23
+   7200      C                   MOVE      WFECHA        FECHA                                                          04/08/23
+   7300      C                   MOVE      WHORA         HORAPRO                                                        04/08/23
+   7400      C                   MOVEL     DCDTHJ        NUMTARA                                                        04/08/23
+   7500      C                   MOVE      WTAR6         NUMBINA                                                        04/08/23
+   7600      C                   EVAL      NOenc =  NOenc + 1                                                           04/08/23
+   7700                          NOMBINA = 'bin no existe';                                                             04/08/23
+   7800      C                   ENDIF                                                                                  25/07/23
+   7900      C*                                                                                                         03/08/23
+   8000      C                                                                                                          03/08/23
+   8100      C                                                                                                          03/08/23
+   8200      C                   WRITE     ACTREG02                                                                     04/08/23
+   8300      C                   READ      CAR0760E                               45                                    04/08/23
+   8400      C                   ENDDO                                                                                  25/07/23
+   8500                          DSPLY    ('ENCONTRO BIN: ' + %CHAR(SIenc));                                            04/08/23
+   8600      C*                                                                                                         25/07/23
+   8700                          DSPLY     ('NO ENCONTRO BIN: ' + %CHAR(NOenc));                                        04/08/23
+   8800      C                                                                                                          04/08/23
+   8900      C                   ENDSR                                                                                  18/07/23
+                                  * * * *  F I N  D E  F U E N T E  * * * *
