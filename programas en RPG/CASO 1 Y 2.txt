@@ -1,0 +1,25 @@
+Con base a sus conocimientos, desarrolle una solución teniendo en cuenta las siguientes indicaciones: 
+- Crear en su librería un archivo de salida con los siguientes campos:
+* Fecha/hora de proceso
+* Número tarjeta
+* Número BIN
+* Nombre BIN
+- Recorrer todo el archivo CANJE/CAFCNTPH, 
+- Extraer del número de tarjeta (campo DCDTHJ) el código BIN (primeras 6 posiciones de la tarjeta) y buscarlo en el archivo SISTEMAS/SWFTAB08. 
+- Si existe generar un registro en el archivo de salida con la información completa
+- Si no existe generar un registro en el archivo de salida con el texto “BIN NO EXISTE” en el campo Nombre BIN.
+
+Al final mostrar un resumen de la cantidad de registros encontrados y la cantidad que no encontró (comando DSPLY).
+
+-----------------------------------------------------------------------------------------------------------------
+
+CASO #1:
+
+Se necesita crear un proceso que lea todos los registros del archivo ELECTRON/CEF0500A y marque con una ‘A’ la posición 16 del campo DNADA3 cuando se cumpla con las siguientes condiciones:
+
+-	Si el BIN de la tarjeta es 496080 o 482451, se recomienda guardar estos BINES en el archivo REFTAB00 para consultarlos posteriormente.
+-	Si la transacción NO es de ALIANZA VISA. 
+-	El valor total de la transacción es mayor a 2000.
+-	La transacción NO esta en el archivo CEF0801L
+
+Los registros deben ser guardados (Antes de ser modificados) en un archivo nuevo que sea idéntico al CEF0801L, solo si el registro fue modificado.
