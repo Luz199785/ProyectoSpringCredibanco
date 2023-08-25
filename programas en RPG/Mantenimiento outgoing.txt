@@ -1,0 +1,246 @@
+  5770WDS V7R2M0  140418                  LISTADO FUENTE SEU                            25/08/23 09:23:44    DESANEW      PÁG.    1
+  ARCHIVO FUENTE  . . . . .  BASEDOS/QRPGLESRC
+  MIEMBRO . . . . . . . . .  BAR0412C
+  SEQNBR*...+... 1 ...+... 2 ...+... 3 ...+... 4 ...+... 5 ...+... 6 ...+... 7 ...+... 8 ...+... 9 ...+... 0
+    100       //---------------------------------------------------------------*                                        28/07/23
+    200       // (C) COPYRIGHT 2023 Todos los Derechos Reservados Crediban     *                                        28/07/23
+    300       //---------------------------------------------------------------*                                        28/07/23
+    400       // Descripción: Consultas de Mant. de Outgoing                                                            28/07/23
+    500       // Programado por: Marcial Mendez                                                                         31/07/23
+    600       // Fecha      : Julio 2023                                                                                31/07/23
+    700       //---------------------------------------------------------------*                                        28/07/23
+    800      H DEBUG  (*Yes)                                                                                            28/07/23
+    900      H DFTACTGRP(*No) ACTGRP(*Caller)                                                                           28/07/23
+   1000      H Option(*NODEBUGIO:*SRCSTMT)                                                                              28/07/23
+   1100      H DecEdit('0,') DatEdit(*DMY/)                                                                             28/07/23
+   1200      H ALWNULL(*USRCTL)                                                                                         28/07/23
+   1300       // Pantalla                                                                                               28/07/23
+   1400        Dcl-F BAD0412D  WORKSTN  SFILE(SFLRCD01:REGN01);                                                         31/07/23
+   1500       //---------------------------------------------------------------*                                        28/07/23
+   1600       //-Definición de Estructuras                                                                              28/07/23
+   1700       //---------------------------------------------------------------*                                        28/07/23
+   1800       // Apuntador para el Subfile                                                                              28/07/23
+   1900      D                 DS                                                                                       28/07/23
+   2000      D  REGN01                 1      4  0                                                                      28/07/23
+   2100       // Datos del Job activo en el Sistema                                                                     28/07/23
+   2200      D                SDS                                                                                       28/07/23
+   2300      D  SYSUSR               254    263                                                                         28/07/23
+   2400       // Campos del SubFile                                                                                     28/07/23
+   2500      D Datos           DS                                                                                       28/07/23
+   2600      D   DCDTRA                       2S 0 Overlay(Datos:*Next)                                                 28/07/23
+   2700      D   DCDTAR                      16A   Overlay(Datos:*Next)                                                 28/07/23
+   2800      D   DFTRAN                       4S 0 Overlay(Datos:*Next)                                                 28/07/23
+   2900      D   DCDCMP                       4S 0 Overlay(Datos:*Next)                                                 28/07/23
+   3000      D   DNLOTE                       5S 0 Overlay(Datos:*Next)                                                 28/07/23
+   3100      D   DNRSEC                       5S 0 Overlay(Datos:*Next)                                                 28/07/23
+   3200      D   DVRCTE                      12S 2 Overlay(Datos:*Next)                                                 28/07/23
+   3300      D   DCDEST                      10S 0 Overlay(Datos:*Next)                                                 28/07/23
+   3400      D   DSTREG                       1A   Overlay(Datos:*Next)                                                 28/07/23
+   3500      D   NUMREL                      15S 0 Overlay(Datos:*Next)                                                 28/07/23
+   3600                                                                                                                 28/07/23
+   3700       // Definición de Variables                                                                                28/07/23
+   3800        Dcl-S MODO Char(1);                                                                                      28/07/23
+   3900        Dcl-S PARRET Char(1);                                                                                    28/07/23
+   4000        Dcl-S Sql Char(999);                                                                                     28/07/23
+   4100        Dcl-S PTEXTO Char(54);                                                                                   28/07/23
+   4200                                                                                                                 28/07/23
+   4300       //Proceso de Mantenimiento                                                                                28/07/23
+   4400        Dcl-Pr BAR0412 Extpgm('BAR0412');                                                                        31/07/23
+   4500          PTEXTO_ Char(54);                                                                                      28/07/23
+   4600          DCDCMP_ Zoned(04);                                                                                     28/07/23
+   4700          DNLOTE_ Zoned(05);                                                                                     28/07/23
+   4800          DNRSEC_ Zoned(05);                                                                                     28/07/23
+   4900        End-Pr;                                                                                                  28/07/23
+   5000                                                                                                                 28/07/23
+   5100       //----------------------------------------------------------------                                        28/07/23
+   5200       //   PRINCIPAL                                                                                            28/07/23
+   5300       //----------------------------------------------------------------                                        28/07/23
+  5770WDS V7R2M0  140418                  LISTADO FUENTE SEU                            25/08/23 09:23:44    DESANEW      PÁG.    2
+  ARCHIVO FUENTE  . . . . .  BASEDOS/QRPGLESRC
+  MIEMBRO . . . . . . . . .  BAR0412C
+  SEQNBR*...+... 1 ...+... 2 ...+... 3 ...+... 4 ...+... 5 ...+... 6 ...+... 7 ...+... 8 ...+... 9 ...+... 0
+   5400        ExSr INICIO;                                                                                             28/07/23
+   5500        ExSr LLENA;                                                                                              28/07/23
+   5600        ExSr SRPRC;                                                                                              28/07/23
+   5700        //                                                                                                       28/07/23
+   5800        *InLr = *On;                                                                                             28/07/23
+   5900       //---------------------------------------------------------------*                                        28/07/23
+   6000       //         Inicializa Variables                                                                           28/07/23
+   6100       //---------------------------------------------------------------*                                        28/07/23
+   6200        BegSr INICIO;                                                                                            28/07/23
+   6300          //                                                                                                     28/07/23
+   6400          Clear FMTMSG;                                                                                          28/07/23
+   6500          SYSPGM = 'BAR0412C';                                                                                   24/08/23
+   6600          PTEXTO = 'Mantenimiento de Transacciones del Outgoing';                                                28/07/23
+   6700         EndSr;                                                                                                  28/07/23
+   6800        //----------------------------------------------------------------                                       28/07/23
+   6900        //          Llena Subfile                                                                                28/07/23
+   7000        //----------------------------------------------------------------                                       28/07/23
+   7100        BegSr LLENA;                                                                                             28/07/23
+   7200          // Inicializa Subfile                                                                                  28/07/23
+   7300          *IN(50) = *On;                                                                                         28/07/23
+   7400          Write SFLCTL01;                                                                                        28/07/23
+   7500          *IN50 = *Off;                                                                                          28/07/23
+   7600          CLEAR REGN01;                                                                                          28/07/23
+   7700          CLEAR SFLOPC;                                                                                          28/07/23
+   7800          NROTAR = %Trim(NROTAR);                                                                                28/07/23
+   7900                                                                                                                 28/07/23
+   8000          Exec SQL                                                                                               28/07/23
+   8100              Close Data;                                                                                        28/07/23
+   8200          If NROTAR = *Blanks And BANCO = *Zeros;                                                                31/07/23
+   8300             Sql = 'SELECT DCDTRA, DCDTAR, DFTRAN, DCDCMP, DNLOTE, +                                             28/07/23
+   8400                    DNRSEC, DVRCTE, DCDEST, +                                                                    31/07/23
+   8500                    DSTREG, RRN(A) +                                                                             28/07/23
+   8600                    FROM BASEDOS/BAF0410D A +                                                                    31/07/23
+   8700                    ORDER BY DCDTRA, DCDTAR, DCDEST';                                                            31/07/23
+   8800          ElseIf NROTAR <> *Blanks And BANCO <> *Zeros;                                                          31/07/23
+   8900             Sql = 'SELECT DCDTRA, DCDTAR, DFTRAN, DCDCMP, DNLOTE, +                                             28/07/23
+   9000                    DNRSEC, DVRCTE, DCDEST, +                                                                    31/07/23
+   9100                    DSTREG, RRN(A) +                                                                             28/07/23
+   9200                    FROM BASEDOS/BAF0410D A' +                                                                   31/07/23
+   9300                    ' WHERE' +                                                                                   28/07/23
+   9400                    ' DCDTAR = ' + NROTAR +                                                                      28/07/23
+   9500                    ' AND DCDCMP = ' + %EDitC(BANCO:'X') +                                                       31/07/23
+   9600                    ' ORDER BY DCDTRA, DCDTAR, DCDEST';                                                          31/07/23
+   9700          ElseIf NROTAR <> *Blanks And BANCO = *Zeros;                                                           31/07/23
+   9800             Sql = 'SELECT DCDTRA, DCDTAR, DFTRAN, DCDCMP, DNLOTE, +                                             28/07/23
+   9900                    DNRSEC, DVRCTE, DCDEST, +                                                                    31/07/23
+  10000                    DSTREG, RRN(A) +                                                                             28/07/23
+  10100                    FROM BASEDOS/BAF0410D A' +                                                                   31/07/23
+  10200                    ' WHERE' +                                                                                   28/07/23
+  10300                    ' DCDTAR = ' + NROTAR +                                                                      28/07/23
+  10400                    ' ORDER BY DCDTRA, DCDTAR, DCDEST';                                                          31/07/23
+  10500          ElseIf NROTAR = *Blanks And BANCO <> *Zeros;                                                           31/07/23
+  10600             Sql = 'SELECT DCDTRA, DCDTAR, DFTRAN, DCDCMP, DNLOTE, +                                             28/07/23
+  5770WDS V7R2M0  140418                  LISTADO FUENTE SEU                            25/08/23 09:23:44    DESANEW      PÁG.    3
+  ARCHIVO FUENTE  . . . . .  BASEDOS/QRPGLESRC
+  MIEMBRO . . . . . . . . .  BAR0412C
+  SEQNBR*...+... 1 ...+... 2 ...+... 3 ...+... 4 ...+... 5 ...+... 6 ...+... 7 ...+... 8 ...+... 9 ...+... 0
+  10700                    DNRSEC,  DVRCTE, DCDEST, +                                                                   31/07/23
+  10800                    DSTREG, RRN(A) +                                                                             28/07/23
+  10900                    FROM BASEDOS/BAF0410D A' +                                                                   31/07/23
+  11000                    ' WHERE' +                                                                                   28/07/23
+  11100                    ' DCDCMP = ' + %EditC(BANCO:'X') +                                                           31/07/23
+  11200                    ' ORDER BY DCDTRA, DCDTAR, DCDEST';                                                          31/07/23
+  11300          EndIf;                                                                                                 28/07/23
+  11400          // Cursor dinamico                                                                                     28/07/23
+  11500          Exec SQL                                                                                               28/07/23
+  11600              Declare Data Dynamic Scroll Cursor For QrySql;                                                     28/07/23
+  11700          Exec SQL                                                                                               28/07/23
+  11800              Prepare QrySql From :Sql;                                                                          28/07/23
+  11900          Exec SQL                                                                                               28/07/23
+  12000              Open Data;                                                                                         28/07/23
+  12100          DoW  (SqlCode = 0);                                                                                    28/07/23
+  12200               Exec Sql                                                                                          28/07/23
+  12300                   Fetch Next From Data Into :Datos;                                                             28/07/23
+  12400               If (SqlCode = 0);                                                                                 28/07/23
+  12500                  REGN01 = REGN01 + 1;                                                                           28/07/23
+  12600                  If REGN01 = 9999;                                                                              28/07/23
+  12700                     Leave;                                                                                      28/07/23
+  12800                  EndIf;                                                                                         28/07/23
+  12900                  If DSTREG = ' ';                                                                               28/07/23
+  13000                     DSTREG = 'P';                                                                               28/07/23
+  13100                  EndIf;                                                                                         28/07/23
+  13200                  Write SFLRCD01;                                                                                28/07/23
+  13300               EndIf;                                                                                            28/07/23
+  13400          EndDo;                                                                                                 28/07/23
+  13500        //                                                                                                       28/07/23
+  13600          Exec SQL                                                                                               28/07/23
+  13700              Close Data;                                                                                        28/07/23
+  13800          *In52 = (REGN01 > *Zeros);                                                                             28/07/23
+  13900          If REGN01 = 0;                                                                                         28/07/23
+  14000             FMTMSG = 'No existen coincidencias en el Outgoing para la +                                         28/07/23
+  14100                       selección';                                                                               28/07/23
+  14200          Else;                                                                                                  28/07/23
+  14300             FMTMSG = *Blanks;                                                                                   28/07/23
+  14400          EndIf;                                                                                                 28/07/23
+  14500        EndSr;                                                                                                   28/07/23
+  14600                                                                                                                 28/07/23
+  14700       //----------------------------------------------------------------                                        28/07/23
+  14800       //          Procesa Funciones seleccionadas por el usuario                                                28/07/23
+  14900       //----------------------------------------------------------------                                        28/07/23
+  15000        BegSr SRPRC;                                                                                             28/07/23
+  15100          //                                                                                                     28/07/23
+  15200          CLEAR FMTMSG;                                                                                          28/07/23
+  15300          If REGN01 = 0;                                                                                         28/07/23
+  15400             FMTMSG = 'No existen coincidencias en el Outgoing para la +                                         28/07/23
+  15500                       selección';                                                                               28/07/23
+  15600          Else;                                                                                                  28/07/23
+  15700             FMTMSG = *Blanks;                                                                                   28/07/23
+  15800          EndIf;                                                                                                 28/07/23
+  15900          Write FMT01;                                                                                           28/07/23
+  5770WDS V7R2M0  140418                  LISTADO FUENTE SEU                            25/08/23 09:23:44    DESANEW      PÁG.    4
+  ARCHIVO FUENTE  . . . . .  BASEDOS/QRPGLESRC
+  MIEMBRO . . . . . . . . .  BAR0412C
+  SEQNBR*...+... 1 ...+... 2 ...+... 3 ...+... 4 ...+... 5 ...+... 6 ...+... 7 ...+... 8 ...+... 9 ...+... 0
+  16000          Write FOT01;                                                                                           28/07/23
+  16100          *In51 = *On;                                                                                           28/07/23
+  16200          EXFMT SFLCTL01;                                                                                        28/07/23
+  16300          Dow *In03 = '0' And                                                                                    28/07/23
+  16400              PARRET <> '1';                                                                                     28/07/23
+  16500              //                                                                                                 28/07/23
+  16600              Select;                                                                                            28/07/23
+  16700              //   Tecla No Válida                                                                               28/07/23
+  16800              When *In66 = *On;                                                                                  28/07/23
+  16900                   FMTMSG = 'Tecla no Valida';                                                                   28/07/23
+  17000              //   Adicionar                                                                                     28/07/23
+  17100              When *In06 = *On And                                                                               28/07/23
+  17200                   MODO = '6';                                                                                   28/07/23
+  17300                   PARRET = '0';                                                                                 28/07/23
+  17400                   ExSr LLENA;                                                                                   28/07/23
+  17500              Other;                                                                                             28/07/23
+  17600                FMTMSG = *Blanks;                                                                                28/07/23
+  17700                If *In52 = *On;                                                                                  28/07/23
+  17800                   ExSr SROPC;                                                                                   28/07/23
+  17900                EndIf;                                                                                           28/07/23
+  18000              EndSl;                                                                                             28/07/23
+  18100              //                                                                                                 28/07/23
+  18200              If PARRET <> '1';                                                                                  28/07/23
+  18300                 *In51 = *On;                                                                                    28/07/23
+  18400                 CLEAR SFLOPC;                                                                                   28/07/23
+  18500                 ExSr LLENA;                                                                                     28/07/23
+  18600                 Write FMT01;                                                                                    28/07/23
+  18700                 Write FOT01;                                                                                    28/07/23
+  18800                 EXFMT SFLCTL01;                                                                                 28/07/23
+  18900               EndIf;                                                                                            28/07/23
+  19000          EndDo;                                                                                                 28/07/23
+  19100        EndSr;                                                                                                   28/07/23
+  19200       //----------------------------------------------------------------                                        28/07/23
+  19300       //          Procesa Opciones digitadas por el usuario                                                     28/07/23
+  19400       //----------------------------------------------------------------                                        28/07/23
+  19500        BegSr SROPC;                                                                                             28/07/23
+  19600        READC SFLRCD01;                                                                                          28/07/23
+  19700        *IN95 = %EOF;                                                                                            28/07/23
+  19800        Dow *In95 = *Off;                                                                                        28/07/23
+  19900            MODO = SFLOPC;                                                                                       28/07/23
+  20000            //                                                                                                   28/07/23
+  20100            Select;                                                                                              28/07/23
+  20200              //                    Modificar                                                                    28/07/23
+  20300            When SFLOPC = '2';                                                                                   28/07/23
+  20400              //                    Eliminar                                                                     28/07/23
+  20500            When SFLOPC = '4';                                                                                   28/07/23
+  20600              //                    Visualizar o Procesar                                                        28/07/23
+  20700            When SFLOPC = '5';                                                                                   28/07/23
+  20800              BAR0412(PTEXTO:DCDCMP:DNLOTE:DNRSEC);                                                              31/07/23
+  20900              //                                                                                                 28/07/23
+  21000            Other;                                                                                               28/07/23
+  21100              // Opción No Válida                                                                                28/07/23
+  21200              FMTMSG = 'Opción no Valida';                                                                       28/07/23
+  5770WDS V7R2M0  140418                  LISTADO FUENTE SEU                            25/08/23 09:23:44    DESANEW      PÁG.    5
+  ARCHIVO FUENTE  . . . . .  BASEDOS/QRPGLESRC
+  MIEMBRO . . . . . . . . .  BAR0412C
+  SEQNBR*...+... 1 ...+... 2 ...+... 3 ...+... 4 ...+... 5 ...+... 6 ...+... 7 ...+... 8 ...+... 9 ...+... 0
+  21300            EndSl;                                                                                               28/07/23
+  21400            //                                                                                                   28/07/23
+  21500            UPDATE SFLRCD01;                                                                                     28/07/23
+  21600            READC SFLRCD01;                                                                                      28/07/23
+  21700            *IN95 = %EOF;                                                                                        28/07/23
+  21800            //                                                                                                   28/07/23
+  21900        EndDo;                                                                                                   28/07/23
+  22000        //                                                                                                       28/07/23
+  22100        CLEAR SFLOPC;                                                                                            28/07/23
+  22200        PARRET = '0';                                                                                            28/07/23
+  22300        ExSr LLENA;                                                                                              28/07/23
+  22400        //                                                                                                       28/07/23
+  22500        EndSr;                                                                                                   28/07/23
+                                  * * * *  F I N  D E  F U E N T E  * * * *
