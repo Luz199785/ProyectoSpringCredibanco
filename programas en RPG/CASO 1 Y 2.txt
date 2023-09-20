@@ -11,6 +11,81 @@ Con base a sus conocimientos, desarrolle una solución teniendo en cuenta las si
 
 Al final mostrar un resumen de la cantidad de registros encontrados y la cantidad que no encontró (comando DSPLY).
 
+**Crear en su librería un archivo de salida con los siguientes campos:**
+
+Fecha/hora de proceso
+Número tarjeta
+Número BIN
+Nombre BIN
+
+FOUTFILE   IF   E           DISK
+D                 DS
+D  PROCESO                  D
+D  NUM_TARJETA              D
+D  NUM_BIN                  D
+D  NOMBRE_BIN               D
+
+**Este código crea un archivo de salida llamado con los campos especificados. El campo representa la fecha/hora de proceso, es el número de tarjeta, es el número BIN y es el nombre BIN.FOUTFILEPROCESONUM_TARJETANUM_BINNOMBRE_BIN**
+
+2.**Recorrer todo el archivo CANJE/CAFCNTPH y extraer el número de tarjeta (campo DCDTHJ) y buscar el código BIN (primeras 6 posiciones de la tarjeta) en el archivo SISTEMAS/SWFTAB08. Si existe, generar un registro en el archivo de salida con la información completa. Si no existe, generar un registro en el archivo de salida con el texto "BIN NO EXISTE" en el campo Nombre BIN.
+
+C                   READ      CANJE/CAFCNTPH
+C                   DOW       NOT %EOF(CANJE/CAFCNTPH)
+C                   EVAL      NUM_BIN = %SUBST(NUM_TARJETA:1:6)
+C                   SETLL     SISTEMAS/SWFTAB08
+C                   READE     SISTEMAS/SWFTAB08
+C                   IF        %EQUAL(SISTEMAS/SWFTAB08)
+C                   EVAL      NOMBRE_BIN = NOMBRE
+C                   ELSE
+C                   MOVE      'BIN NO EXISTE' NOMBRE_BIN
+C                   ENDIF
+C                   WRITE     FOUTFILE
+C                   READ      CANJE/CAFCNTPH
+C                   ENDDO
+**Este código recorre el archivo utilizando un bucle hasta que se alcanza el final del archivo. En cada iteración, se extrae el número de tarjeta y se busca en el archivo utilizando la instrucción (Set Lower Limit) seguida de (Read Equal) para buscar coincidencias exactas. Si se encuentra una coincidencia, se asigna el nombre BIN correspondiente al campo del archivo de salida. Si no se encuentra una coincidencia, se asigna el texto "BIN NO EXISTE" al campo . Luego, se escribe un registro en el archivo de salida utilizando la instrucción . Finalmente, se lee el siguiente registro en el archivo y se repite el bucle hasta que se alcanza el final del archivo.CANJE/CAFCNTPHDO WHILESISTEMAS/SWFTAB08SETLLREADENOMBRE_BINNOMBRE_BINWRITECANJE/CAFCNTPH**
+
+3**Mostrar un resumen de la cantidad de registros encontrados y la cantidad que no se encontró utilizando el comando .DSPLY**
+C                   DSPLY     'Registros encontrados: ' + %CHAR(COUNT)
+C                   DSPLY     'Registros no encontrados: ' + %CHAR(COUNT_N)
+
+**Este código muestra en la pantalla el resumen de la cantidad de registros encontrados y la cantidad que no se encontró utilizando el comando . representa la cantidad de registros encontrados y representa la cantidad de registros no encontrados.DSPLYCOUNTCOUNT_N**
+
+**Diagrama de flujo**
+
+Inicio -> [Crear archivo de salida con campos requeridos]
+        |
+        V
+[Leer registro del archivo CANJE/CAFCNTPH]
+        |
+        V
+[¿Fin del archivo CANJE/CAFCNTPH?]
+   |
+   V
+[No] -> [Extraer número de tarjeta y buscar código BIN en archivo SISTEMAS/SWFTAB08]
+   |
+   V
+[¿Existe en archivo SISTEMAS/SWFTAB08?]
+   |
+   V
+[Sí] -> [Asignar nombre BIN al campo NOMBRE_BIN del archivo de salida]
+   |
+   V
+[No] -> [Asignar texto "BIN NO EXISTE" al campo NOMBRE_BIN del archivo de salida]
+   |
+   V
+[Guardar registro en archivo de salida]
+   |
+   V
+[Leer siguiente registro del archivo CANJE/CAFCNTPH]
+   |
+   V
+[¿Fin del archivo CANJE/CAFCNTPH?]
+   |
+   V
+[Sí] -> [Mostrar resumen de registros encontrados y no encontrados]
+   |
+   V
+[Fin del Programa]
 -----------------------------------------------------------------------------------------------------------------
 
 CASO #1:
