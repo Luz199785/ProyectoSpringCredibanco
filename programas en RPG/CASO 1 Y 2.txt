@@ -98,3 +98,95 @@ Se necesita crear un proceso que lea todos los registros del archivo ELECTRON/CE
 -	La transacción NO esta en el archivo CEF0801L
 
 Los registros deben ser guardados (Antes de ser modificados) en un archivo nuevo que sea idéntico al CEF0801L, solo si el registro fue modificado.
+
+     **FREE
+
+     // Crear archivo nuevo (CEF0801L_copia)
+     CRTPF FILE(CEF0801L_C) RCDLEN(100) MBR(*NONE)
+
+     // Declarar variables
+     DCL        VAR(&BIN) TYPE(*CHAR) LEN(6)
+     DCL        VAR(&TRANSACCION) TYPE(*CHAR) LEN(20)
+     DCL        VAR(&VALOR) TYPE(*DEC) LEN(15 2)
+     DCL        VAR(&REGISTRO) TYPE(*CHAR) LEN(100)
+     DCL        VAR(&MODIFICADO) TYPE(*LGL) VALUE('0')
+
+     // Abrir archivos
+     OPNQRYF FILE((ELECTRON/CEF0500A)) QRYSLT('1=1') OUTTYPE(*OUTFILE) OUTFILE(ELECTRON/CEF0500A)
+
+     // Leer registros
+     READ: RCVF FILE(ELECTRON/CEF0500A) MONMSG(CPF0864) EXEC(GOTO EOF)
+
+     // Verificar condiciones
+     IF COND(&BIN *EQ '496080' *OR &BIN *EQ '482451') THEN(DO)
+       // Guardar BIN en archivo REFTAB00
+       ADDPFM FILE(REFTAB00) MBR(REFTAB00) +
+         PARM(&BIN)
+     END
+     IF COND(&TRANSACCION *NE 'ALIANZA VISA') THEN(DO)
+       IF COND(&VALOR *GT 2000) THEN(DO)
+         IF COND(*NOT FOUND CEF0801L &TRANSACCION) THEN(DO)
+           // Marcar posición 16 del campo DNADA3 con 'A'
+           CHGVAR VAR(&REGISTRO) VALUE(%SST(&REGISTRO 1 15) || 'A' || %SUBST(&REGISTRO 17))
+           CHGVAR VAR(&MODIFICADO) VALUE('1')
+         ENDDO
+       ENDDO
+     ENDDO
+
+     // Guardar registro modificado en archivo nuevo (CEF0801L_copia)
+     IF COND(&MODIFICADO *EQ '1') THEN(DO)
+       ADDPFM FILE(CEF0801L_C) MBR(CEF0801L_C) PARM(&REGISTRO)
+     ENDDO
+
+     // Volver a leer registros
+     GOTO READ
+
+     EOF:
+     // Cerrar archivos
+     CLOF FILE(ELECTRON/CEF0500A)
+     CLOF FILE(CEF0801L_C)
+
+****PSEUDOCODIGO****
+
+Inicio
+├─ Crear archivo nuevo (CEF0801L_copia)
+├─ Leer registro (ELECTRON/CEF0500A)
+│  ├─ ¿Fin de archivo? (Sí)
+│  │  └─ Fin
+│  └─ Verificar condiciones
+│     ├─ ¿BIN es 496080 o 482451? (Sí)
+│     │  ├─ Guardar BIN en archivo REFTAB00
+│     │  └─ Continuar
+│     ├─ ¿Transacción es de ALIANZA VISA? (No)
+│     │  ├─ ¿Valor total de la transacción es mayor a 2000? (Sí)
+│     │  │  ├─ ¿Transacción está en archivo CEF0801L? (No)
+│     │  │  │  └─ Marcar posición 16 del campo DNADA3 con 'A'
+│     │  │  └─ Continuar
+│     │  └─ Continuar
+│     └─ Continuar
+├─ Guardar registro modificado en archivo nuevo (CEF0801L_copia)
+├─ Leer siguiente registro (ELECTRON/CEF0500A)
+└─ Volver a "Verificar condiciones"
+
+Explicación línea por línea:
+
+CRTPF FILE(CEF0801L_C) RCDLEN(100) MBR(*NONE): Crea un nuevo archivo llamado CEF0801L_C con una longitud de registro de 100 bytes y sin miembros.
+DCL VAR(&BIN) TYPE(*CHAR) LEN(6): Declara la variable &BIN como un campo de caracteres de longitud 6 para almacenar el BIN de la tarjeta.
+DCL VAR(&TRANSACCION) TYPE(*CHAR) LEN(20): Declara la variable &TRANSACCION como un campo de caracteres de longitud 20 para almacenar el nombre de la transacción.
+DCL VAR(&VALOR) TYPE(*DEC) LEN(15 2): Declara la variable &VALOR como un campo de tipo decimal con una longitud de 15 y 2 decimales para almacenar el valor de la transacción.
+DCL VAR(&REGISTRO) TYPE(*CHAR) LEN(100): Declara la variable &REGISTRO como un campo de caracteres de longitud 100 para almacenar el registro actual del archivo.
+DCL VAR(&MODIFICADO) TYPE(*LGL) VALUE('0'): Declara la variable &MODIFICADO como un campo lógico con un valor inicial de '0' para indicar si el registro ha sido modificado.
+OPNQRYF FILE((ELECTRON/CEF0500A)) QRYSLT('1=1') OUTTYPE(*OUTFILE) OUTFILE(ELECTRON/CEF0500A): Abre el archivo ELECTRON/CEF0500A y lo prepara para la lectura de registros.
+READ: RCVF FILE(ELECTRON/CEF0500A) MONMSG(CPF0864) EXEC(GOTO EOF): Lee el siguiente registro del archivo ELECTRON/CEF0500A y, si no hay más registros, salta al punto de etiqueta EOF.
+IF COND(&BIN *EQ '496080' *OR &BIN *EQ '482451') THEN(DO): Comprueba si el BIN de la tarjeta es igual a '496080' o '482451'.
+ADDPFM FILE(REFTAB00) MBR(REFTAB00) PARM(&BIN): Agrega el BIN al archivo REFTAB00.
+IF COND(&TRANSACCION *NE 'ALIANZA VISA') THEN(DO): Comprueba si el nombre de la transacción no es igual a 'ALIANZA VISA'.
+IF COND(&VALOR *GT 2000) THEN(DO): Comprueba si el valor de la transacción es mayor a 2000.
+IF COND(*NOT FOUND CEF0801L &TRANSACCION) THEN(DO): Comprueba si el registro de transacción no se encuentra en el archivo CEF0801L.
+CHGVAR VAR(&REGISTRO) VALUE(%SST(&REGISTRO 1 15) || 'A' || %SUBST(&REGISTRO 17)): Modifica el campo DNADA3 del registro actual, agregando 'A' en la posición 16.
+CHGVAR VAR(&MODIFICADO) VALUE('1'): Establece la variable &MODIFICADO en '1' para indicar que el registro ha sido modificado.
+ADDPFM FILE(CEF0801L_C) MBR(CEF0801L_C) PARM(&REGISTRO): Agrega el registro modificado al archivo nuevo CEF0801L_C.
+GOTO READ: Vuelve a leer el siguiente registro del archivo ELECTRON/CEF0500A.
+EOF: CLOF FILE(ELECTRON/CEF0500A) CLOF FILE(CEF0801L_C): Cierra los archivos ELECTRON/CEF0500A y CEF0801L_C al finalizar el proceso.
+Lógica general:
+El código comienza creando un nuevo archivo llamado CEF0801L_C para guardar los registros modificados. Luego, se abren los archivos necesarios y se inicia un bucle de lectura de registros del archivo ELECTRON/CEF0500A. Para cada registro leído, se verifican las condiciones establecidas y, si se cumplen, se realiza la modificación necesaria en el campo DNADA3 del registro y se marca el registro como modificado. Finalmente, los registros modificados se guardan en el archivo CEF0801L_C. Este proceso se repite hasta que no haya más registros en el archivo ELECTRON/CEF0500A.
