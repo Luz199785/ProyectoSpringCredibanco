@@ -1,0 +1,81 @@
+Programa sumar:
+qddsscrc1
+
+salida +00000
+entrada +99999 
+
+1. Trabajar con bibliotecas
+2. 12
+3. QRPGLESRC   *FILE --> 12
+4. 14 -->  SUMANUMBER  RPGLE
+5.  Y   Y=Sí, N=No
+6. STRDBG PGM(SUMANUMBER)
+7. F10--> Baja el puntero
+8. F10--> Muestra el contenido de la variable
+9. Entro a pantalla con 17
+10. Editar con 12
+'' cambiar texto
+>>>>> correr espacio
++3333 campo de salida
++6666 entrada
+-
+= para bajar mover
+? poner nonmbre a la variable en pantallas
++0000 numero
++oooo
++o(20)
+RP1 repetir linea
+
+
+STRDBG PGM(SUMANUMBER)
+enddbg 
+
+PRIMERO SE COMPILA (14) Y LUEGO SE LLAMA CON CALL
+
+
+
+CALL PGM(SUMANUMBER) PARM('00005' '00008')
+
+
+F********************************************************************                                      04/09/96
+    200      F*                                                                  *                                      04/09/96
+    300      F*PROGRAMA SUMA DE NUMEROS                              *                                                  09/10/23
+    400      F*ELABORADO POR: lUZ ADRIANA MORENO                                                                        09/10/23
+    500      F********************************************************************                                      04/09/96
+    600      Fpantalla  CF   E             WORKSTN                                                                      10/10/23
+    700        Dcl-s Numero1 Zoned(5:0);                                                                                09/10/23
+    800        Dcl-s Numero2 Zoned(5:0);                                                                                09/10/23
+    900        Dcl-s Numero3 Zoned(5:0);                                                                                09/10/23
+   1000      F*                                                                                                         09/10/23
+   1100      F*                                                                                                         09/10/23
+   1200      C                                                                                                          09/10/23
+   1300      C*                                                                                                         09/10/23
+   1400      C*                                                                                                         09/10/23
+   1500            dow *inkc = *off;                                                                                    10/10/23
+   1600      C* Toma dos números de entrada, los convierte en números decimales                                         10/10/23
+   1700              // Numero1 = %dec(%subst(numero1a:1:5):5:0);                                                       10/10/23
+   1800              // Numero2 = %dec(%subst(numero2a:1:5):5:0);                                                       10/10/23
+   1900              // Numero3 = Numero1 + Numero2 ;                                                                   10/10/23
+   2000              write  BAP0630B  ;                                                                                 10/10/23
+   2100              write  BAP0630X  ;                                                                                 10/10/23
+   2200              exfmt  BAP0630C  ;                                                                                 10/10/23
+   2201              msg01='                         ' ;                                                                10/10/23
+   2300              if opcion = 1               ;                                                                      10/10/23
+   2301                  Numero3 = Numero1 + Numero2 ;                                                                  10/10/23
+   2302              elseif opcion   = 2               ;                                                                10/10/23
+   2303                  Numero3 = Numero1 - Numero2 ;                                                                  10/10/23
+   2304              elseif opcion = 3           ;                                                                      10/10/23
+   2305                  Numero3 = Numero1 * Numero2 ;                                                                  10/10/23
+   2306              elseif opcion = 4           ;                                                                      10/10/23
+   2307                Monitor;                                                                                         10/10/23
+   2308                  Numero3 = Numero1 / Numero2 ;                                                                  10/10/23
+   2309                On-Error *All;                                                                                   10/10/23
+   2310                  numero3 = 1;                                                                                   10/10/23
+   2311                  msg01='No se puede dividir por 0' ;                                                            10/10/23
+   2312                 EndMon;                                                                                         10/10/23
+   2400              endif;                                                                                             10/10/23
+   2401            enddo;                                                                                               10/10/23
+   2500                *inlr = '1'              ;                                                                       09/10/23
+   2600      C*                                                                                                         09/10/23
+   2700      C*                                                                                                         09/10/23
+                                  * * * *  F I N  D E  F U E N T E  * * * *
