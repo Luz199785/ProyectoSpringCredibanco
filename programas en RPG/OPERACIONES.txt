@@ -1,0 +1,47 @@
+  5770WDS V7R2M0  140418                  LISTADO FUENTE SEU                            17/10/23 15:38:42    DESANEW      PÁG.    1
+  ARCHIVO FUENTE  . . . . .  LMORENO/QRPGLESRC
+  MIEMBRO . . . . . . . . .  RESANUMBER
+  SEQNBR*...+... 1 ...+... 2 ...+... 3 ...+... 4 ...+... 5 ...+... 6 ...+... 7 ...+... 8 ...+... 9 ...+... 0
+    100      F********************************************************************                                      04/09/96
+    200      F*                                                                  *                                      04/09/96
+    300      F*PROGRAMA SUMA DE NUMEROS                              *                                                  09/10/23
+    400      F*ELABORADO POR: lUZ ADRIANA MORENO                                                                        09/10/23
+    500      F********************************************************************                                      04/09/96
+    600      Fpantalla  CF   E             WORKSTN                                                                      10/10/23
+    700        Dcl-s Numero1 Zoned(5:2);                                                                                10/10/23
+    800        Dcl-s Numero2 Zoned(5:2);                                                                                10/10/23
+    900        Dcl-s Numero3 Zoned(10:4);                                                                               10/10/23
+   1000      F*                                                                                                         09/10/23
+   1100      F*                                                                                                         09/10/23
+   1200      C                                                                                                          09/10/23
+   1300      C*                                                                                                         09/10/23
+   1400      C*                                                                                                         09/10/23
+   1500            dow *inkc = *off;                                                                                    10/10/23
+   1600      C* Toma dos números de entrada, los convierte en números decimales                                         10/10/23
+   1700              // Numero1 = %dec(%subst(numero1a:1:5):5:0);                                                       10/10/23
+   1800              // Numero2 = %dec(%subst(numero2a:1:5):5:0);                                                       10/10/23
+   1900              // Numero3 = Numero1 + Numero2 ;                                                                   10/10/23
+   2000              write  BAP0630B  ;                                                                                 10/10/23
+   2100              write  BAP0630X  ;                                                                                 10/10/23
+   2200              exfmt  BAP0630C  ;                                                                                 10/10/23
+   2300              msg01='                         ' ;                                                                10/10/23
+   2400              if opcion = 1               ;                                                                      10/10/23
+   2500                  Numero3 = Numero1 + Numero2 ;                                                                  10/10/23
+   2600              elseif opcion   = 2               ;                                                                10/10/23
+   2700                  Numero3 = Numero1 - Numero2 ;                                                                  10/10/23
+   2800              elseif opcion = 3           ;                                                                      10/10/23
+   2900                  Numero3 = Numero1 * Numero2 ;                                                                  10/10/23
+   3000              elseif opcion = 4           ;                                                                      10/10/23
+   3100                Monitor;                                                                                         10/10/23
+   3200                  Numero3 = Numero1 / Numero2 ;                                                                  10/10/23
+   3300                On-Error *All;                                                                                   10/10/23
+   3400                  numero3 = 1;                                                                                   10/10/23
+   3500                  msg01='No se puede dividir por 0' ;                                                            10/10/23
+   3600                 EndMon;                                                                                         10/10/23
+   3700              endif;                                                                                             10/10/23
+   3800              DSPLY    ('Operación exitosa');                                                                    11/10/23
+   3900            enddo;                                                                                               10/10/23
+   4000                *inlr = '1'              ;                                                                       09/10/23
+   4100      C*                                                                                                         09/10/23
+   4200      C*                                                                                                         09/10/23
+                                  * * * *  F I N  D E  F U E N T E  * * * *
