@@ -1,0 +1,17 @@
+  5770WDS V7R2M0  140418                  LISTADO FUENTE SEU                            18/10/23 17:01:59    DESANEW      PÁG.    1
+  ARCHIVO FUENTE  . . . . .  PLS001/QRPGLESRC
+  MIEMBRO . . . . . . . . .  VQF0350Q03
+  SEQNBR*...+... 1 ...+... 2 ...+... 3 ...+... 4 ...+... 5 ...+... 6 ...+... 7 ...+... 8 ...+... 9 ...+... 0
+    100      A********************************************************************                                      21/02/96
+    200      A*                                                                  *                                      21/02/96
+    300      A* ARCHIVO  - VQF0350Q   LOGICO PARA FECHA DE PROCESO               *                                      18/10/23
+    400      A*                                                                  *                                      21/02/96
+    500      A* PROGRAMADO POR      - DANIEL QUEVEDO - LUZ ADRIANA MORENO        *                                      18/10/23
+    600      A*                                                                  *                                      21/02/96
+    700      A* FECHA PROGRAMACION  - OCT/18/23                                  *                                      18/10/23
+   1000      A*                                                                  *                                      21/02/96
+   1100      A* TODOS LOS DERECHOS RESERVADOS POR CREDIBANCO - 2023              *                                      18/10/23
+   1200      A********************************************************************                                      21/02/96
+   1300      A          R VQR0350Q                  PFILE(*LIBL/VQF0350Q)                                               18/10/23
+   1400      A          K DFHPRO                                                                                        18/10/23
+                                  * * * *  F I N  D E  F U E N T E  * * * *
