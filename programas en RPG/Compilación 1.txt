@@ -1,5 +1,14 @@
-Programa sumar:
+Pmirar la llave
+shift f9-- segunda pantalla                                  DPRFEC
+strsql
+select * from VQF0137L f4--SELECT campos---f4--f11
+
+dspdbr---> mirar logicos de un archivo
+25 f13---> buscar palabra en todos los programas
+Call basedos/cac0700s ---Ambientar
+
 qddsscrc1
+QDDSSRC1 
 
 salida +00000
 entrada +99999 
@@ -24,17 +33,23 @@ entrada +99999
 +0000 numero
 +oooo
 +o(20)
++O(30)  
 RP1 repetir linea
 
+SI HAY ERRORES EN LA COMPILACIÓN : SP-->5
+ 
 
 STRDBG PGM(SUMANUMBER)
+SHIFT F4 ---> PARA BUSCAR POR ERROR
+B PARA LLEGAR AL FINAL
 enddbg 
 
 PRIMERO SE COMPILA (14) Y LUEGO SE LLAMA CON CALL
 
 
 
-CALL PGM(SUMANUMBER) PARM('00005' '00008')
+CALL PGM(RESANUMBER) PARM('00005' '00008')
+
 
 
 F********************************************************************                                      04/09/96
