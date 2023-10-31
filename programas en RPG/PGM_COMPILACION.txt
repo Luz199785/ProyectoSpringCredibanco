@@ -1,0 +1,88 @@
+  5770WDS V7R2M0  140418                  LISTADO FUENTE SEU                            31/10/23 09:09:23    DESANEW      PÁG.    1
+  ARCHIVO FUENTE  . . . . .  PLS001/QRPGLESRC
+  MIEMBRO . . . . . . . . .  PRDP01N
+  SEQNBR*...+... 1 ...+... 2 ...+... 3 ...+... 4 ...+... 5 ...+... 6 ...+... 7 ...+... 8 ...+... 9 ...+... 0
+    100       *==================================================================*                                      18/10/23
+    200       *                                                                  *                                      18/10/23
+    300       * PROGRAMA - VQF0350Q - DEPURACION DE ARCHIVOS PARTE 1             *                                      25/10/23
+    400       *                                                                  *                                      18/10/23
+    500       *                                                                  *                                      18/10/23
+    600       * PROGRAMADO POR      - LUZ ADRIANA MORENO - DANIEL QUEVEDO - SENA *                                      18/10/23
+    700       *                                                                  *                                      18/10/23
+    800       * FECHA PROGRAMACION  - 18/10/2023                                 *                                      18/10/23
+    900  M03  *                                                                  *                                      18/10/23
+   1000       *                                                                  *                                      18/10/23
+   1100  M04  * DESCRIPCION         - PROGRAMA QUE DEPURA LOS ARCHIVOS DEL       *                                      18/10/23
+   1200   |   *                       VQF0350Q Y DEMAS                           *                                      18/10/23
+   1300   |   *                     Se ejecuta a partir del CL RECTAB74 que le   *                                      24/10/23
+   1400   |   *                     envía como parametro la fecha del sistema    *                                      24/10/23
+   1500   |   *                     y el numero de meses hacia atras para        *                                      24/10/23
+   1600   |   *                     depurar el archivo.                          *                                      24/10/23
+   1700  M04  *                                                                  *                                      18/10/23
+   1800       * TODOS LOS DERECHOS RESERVADOS POR CREDIBANCO VISA - 2023         *                                      18/10/23
+   1900       *==================================================================*                                      18/10/23
+   2000      FVQF0350Q03UF   E           K DISK                                                                         24/10/23
+   2100      FREFTAB74  UF   E           K DISK                                                                         24/10/23
+   2200      FVQF0350QBKO    E           K DISK    PREFIX(O_)                                                           19/10/23
+   2300      F                                     RENAME(VQR0350Q:VQR0350Q2)                                           19/10/23
+   2400      DFECWWW           S               D   DATFMT(*JIS)                                                         24/10/23
+   2500      DWFEHAS           S              8  0                                                                      24/10/23
+   2600       // Parametros de Entrada                                                                                  19/10/23
+   2700        Dcl-PI *N;                                                                                               19/10/23
+   2800           Dcl-Parm pFec zoned(8:0);                                                                             19/10/23
+   2900           Dcl-Parm pNro zoned(3:0);                                                                             24/10/23
+   3000        End-PI;                                                                                                  19/10/23
+   3100       //Free                                                                                                    18/10/23
+   3200        Dcl-S suma Zoned(10:0);                                                                                  18/10/23
+   3300        Dcl-S fecha Zoned(08:0);                                                                                 18/10/23
+   3400                                                                                                                 19/10/23
+   3500           Wfehas = %int(pFec);                                                                                  24/10/23
+   3600      C                   move      WFEHAS        FECWWW                                                         24/10/23
+   3700      C                   subdur    pNro:*m       FecWWW                                                         24/10/23
+   3800      C                   move      FECWWW        Fecha                                                          24/10/23
+   3900           Suma = 0;                                                                                             18/10/23
+   4000           Setgt fecha VQF0350Q03;                                                                               19/10/23
+   4100           Readp       VQF0350Q03;                                                                               18/10/23
+   4200           Dow Not %Eof(VQF0350Q03);                                                                             18/10/23
+   4300           //If DFHPRO <= FecActual;                                                                             18/10/23
+   4400               Suma = Suma + 1;                                                                                  18/10/23
+   4500               Exsr Mover_Campos;                                                                                19/10/23
+   4600               delete VQR0350Q  ;                                                                                19/10/23
+   4700           //EndIf;                                                                                              18/10/23
+   4800           Readp       VQF0350Q03;                                                                               18/10/23
+   4900           EndDo;                                                                                                18/10/23
+   5000                                                                                                                 24/10/23
+   5100           CHAIN 'VQF0350Q03' REFTAB74;                                                                          24/10/23
+   5200           if %found(REFTAB74);                                                                                  24/10/23
+   5300              TFEPRO = %int(pFec);                                                                               24/10/23
+  5770WDS V7R2M0  140418                  LISTADO FUENTE SEU                            31/10/23 09:09:23    DESANEW      PÁG.    2
+  ARCHIVO FUENTE  . . . . .  PLS001/QRPGLESRC
+  MIEMBRO . . . . . . . . .  PRDP01N
+  SEQNBR*...+... 1 ...+... 2 ...+... 3 ...+... 4 ...+... 5 ...+... 6 ...+... 7 ...+... 8 ...+... 9 ...+... 0
+   5400              update  RERTAB74;                                                                                  24/10/23
+   5500           endif;                                                                                                24/10/23
+   5600                                                                                                                 24/10/23
+   5700         *inLr = *On;                                                                                            18/10/23
+   5800                                                                                                                 19/10/23
+   5900         // Almacena campos eliminados en archivo temporal                                                       19/10/23
+   6000                                                                                                                 19/10/23
+   6100         Begsr Mover_Campos;                                                                                     19/10/23
+   6200            CLEAR VQR0350Q2;                                                                                     19/10/23
+   6300            O_DCDTAR =  DCDTAR;                                                                                  19/10/23
+   6400            O_DFECTR =  DFECTR;                                                                                  19/10/23
+   6500            O_DFHTRA =  DFHTRA;                                                                                  19/10/23
+   6600            O_DCDAUT =  DCDAUT;                                                                                  19/10/23
+   6700            O_DVRTRA =  DVRTRA;                                                                                  19/10/23
+   6800            O_DCDEST =  DCDEST;                                                                                  19/10/23
+   6900            O_DCTRAP =  DCTRAP;                                                                                  19/10/23
+   7000            O_DTRCAP =  DTRCAP;                                                                                  19/10/23
+   7100            O_DNRENV =  DNRENV;                                                                                  19/10/23
+   7200            O_DREFCI =  DREFCI;                                                                                  19/10/23
+   7300            O_DEXTRC =  DEXTRC;                                                                                  19/10/23
+   7400            O_DSTREG =  DSTREG;                                                                                  19/10/23
+   7500            O_DFHPRO =  DFHPRO;                                                                                  19/10/23
+   7600            O_DHMPRO =  DHMPRO;                                                                                  19/10/23
+   7700            WRITE VQR0350Q2;                                                                                     19/10/23
+   7800         Endsr;                                                                                                  19/10/23
+   7900       //EndFree                                                                                                 18/10/23
+                                  * * * *  F I N  D E  F U E N T E  * * * *
