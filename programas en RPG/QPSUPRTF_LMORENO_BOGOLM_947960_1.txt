@@ -1,0 +1,923 @@
+  5770WDS V7R2M0  140418                  LISTADO FUENTE SEU                            08/11/23 09:36:24    DESANEW      PÁG.    1
+  ARCHIVO FUENTE  . . . . .  LMORENO/QRPGLESRC
+  MIEMBRO . . . . . . . . .  CER0100LUZ
+  SEQNBR*...+... 1 ...+... 2 ...+... 3 ...+... 4 ...+... 5 ...+... 6 ...+... 7 ...+... 8 ...+... 9 ...+... 0
+    100      F********************************************************************                                      14/09/98
+    200      F*                                                                  *                                      12/02/04
+    300      F* PROGRAMA - CER0100  - LECTURA Y LIQUIDACION TRANS. VISA          *                                      06/11/13
+    400      F*                                                                  *                                      14/09/98
+    500      F* PROGRAMADO POR      - JORGE HERNANDO CERCADO                     *                                      14/09/98
+    600      F*                                                                  *                                      14/09/98
+    700      F* FECHA PROGRAMACION  - ENE/2005                                   *                                      02/02/05
+    800      F*                                                                  *                                      14/09/98
+    900      F* FECHA REVISION      - ENE/2005  - JORGE HERNANDO CERCADO ZAMORA  *                                      02/02/05
+   1000      F*                     - AGO/2010  - LILIANA LOZANO                 *                                      17/08/10
+   1100      F*                                                                  *                                      14/09/98
+   1200      F*                                                                  *                                      14/09/98
+   1300       ***--------------------------------------------------------------------***                                12/02/19
+   1400       *PROYECTO            : MPT-546 SMB - Modificacion impuestos en las trx   *                                12/02/19
+   1500       *                      adquiridas en Gestor de Recaudo                   *                                12/02/19
+   1600       *MODIFICO            : Alberto García Calderón  - Cebit                  *                                12/02/19
+   1700       *FECHA MODIFICACION  : 2019-02-12                                        *                                12/02/19
+   1800       *DESCRIPCION         : Se modifica para que en la validación permita los *                                12/02/19
+   1900       *                      valores en ceros en:                              *                                12/02/19
+   2000       *                      VALOR DE TARIFA - FIJO  en el campo WVRTINP       *                                12/02/19
+   2100       ***--------------------------------------------------------------------***                                12/02/19
+   2200       *PROYECTO            : MPT-510 SMB - Decreto 2230 propina no sea su-     *                                15/02/19
+   2300       *                      jeta a lisquidacion de valores del int. adq.      *                                15/02/19
+   2400       *MODIFICO            : Carlos Arturo Castro Vasquez                      *                                15/02/19
+   2500       *FECHA MODIFICACION  : 2019-02-15                                        *                                15/02/19
+   2600       *DESCRIPCION         : No cobrar el al TII de adquirencia sobre el    os *                                15/02/19
+   2700       *                      valores de la propina.                            *                                15/02/19
+   2800       ***--------------------------------------------------------------------***                                15/02/19
+   2900      F********************************************************************                                      06/04/22
+   3000       *PROYECTO            : MPT-2607 Proyecto Bin8                      *                                      06/04/22
+   3100       *MODIFICO            : FABIO MONROY - CBIT                         *                                      06/04/22
+   3200       *FECHA MODIFICACION  : 2022-04-01                                  *                                      06/04/22
+   3300       *DESCRIPCION         : Se remplaza tabla BINES por REFTAB23        *                                      06/04/22
+   3400      F***--------------------------------------------------------------***                                      06/04/22
+   3500      F* TODOS LOS DERECHOS RESERVADOS POR CREDIBANCO VISA - 2005         *                                      02/02/05
+   3600      F********************************************************************                                      14/09/98
+   3700      F*           ---> ARCHIVO ENTRADA                                                                          12/02/04
+   3800      FCEF0500A  UF   E             DISK                                                                         08/03/05
+   3900      F*           ---> ARCHIVO COMERCIOS VISA                                                                   03/02/05
+   4000      FESFBASIC  IF   E           K DISK                                                                         03/02/05
+   4100      F*           ---> ARCHIVO TASAS DE INTER (EL)                                                              15/03/05
+   4200      FESFDESCU  IF   E           K DISK                                                                         10/03/05
+   4300      F*           ---> ARCHIVO ENTIDADES FINAC.                                                                 14/02/05
+   4400      FREFTAB01  IF   E           K DISK                                                                         14/02/05
+   4500      F*           ---> ARCHIVO TASAS DE INTER (CR, DB)                                                          15/03/05
+   4600      FREFTAB06  IF   E           K DISK                                                                         03/02/05
+   4700      F*           ---> ARCHIVO TERMINALES                                                                       10/03/05
+   4800      FRELTA21A  IF   E           K DISK                                                                         10/03/05
+   4900      F*           ---> ARCHIVO COMIS DE ADQ                                                                     08/02/05
+   5000      FESL0810N  IF   E           K DISK                                                                         01/04/05
+   5100      F*           ---> ARCHIVO COMIS DE ADQ / NVO ENCAD.                                                        05/02/08
+   5200      FESF0810C01IF   E           K DISK    RENAME(ESR0810C:ESK0810C)                                            05/02/08
+   5300      F*           TABLA MIEMBROS PRINCIPALES VISA                                                               07/06/17
+  5770WDS V7R2M0  140418                  LISTADO FUENTE SEU                            08/11/23 09:36:24    DESANEW      PÁG.    2
+  ARCHIVO FUENTE  . . . . .  LMORENO/QRPGLESRC
+  MIEMBRO . . . . . . . . .  CER0100LUZ
+  SEQNBR*...+... 1 ...+... 2 ...+... 3 ...+... 4 ...+... 5 ...+... 6 ...+... 7 ...+... 8 ...+... 9 ...+... 0
+   5400      FBAFTAB40  IF   E           K DISK                                                                         07/06/17
+   5500      F*                                                                                                         07/06/17
+   5600      FQPRINT    O    F  198        PRINTER                                                                      20/05/08
+   5700      D*                                                                                                         10/02/05
+   5800      D*           ---> ARREGLOS                                                                                 10/02/05
+   5900      D*                                                                                                         10/02/05
+   6000      D NUM             S              1    DIM(19)                                                              10/02/05
+   6100      D NUE             S              1    DIM(19)                                                              10/02/05
+   6200      D*                                                                                                         18/01/05
+   6300      D*           ---> VARIABLES                                                                                12/02/04
+   6400      Dwdtarjeb         S             19A   INZ(*BLANKS)                                                         01/04/22
+   6500      Dwrcdcmpb         S              4A   INZ(*BLANKS)                                                         01/04/22
+   6600      Dwbindesb         S             12A   INZ(*BLANKS)                                                         01/04/22
+   6700      Dwbinhasb         S             40A   INZ(*BLANKS)                                                         01/04/22
+   6800      Dwbinpr1b         S             40A   INZ(*BLANKS)                                                         01/04/22
+   6900      Dwbinpr2b         S             40A   INZ(*BLANKS)                                                         01/04/22
+   7000      Dwbinpr3b         S             40A   INZ(*BLANKS)                                                         01/04/22
+   7100      Dwbinpr4b         S             40A   INZ(*BLANKS)                                                         01/04/22
+   7200      Dwotrcamb         S           1000A   INZ(*BLANKS)                                                         06/04/22
+   7300      D*                                                                                                         18/01/05
+   7400      D*                                                                                                         01/04/22
+   7500      DIRDNOPE          S              1                                                                         18/01/05
+   7600      DICHKBAS          S              1                                                                         03/02/05
+   7700      DICHKT01          S              1                                                                         14/02/05
+   7800      DICHKT06          S              1                                                                         03/02/05
+   7900      DICHKT08          S              1                                                                         10/03/05
+   8000      DICHKDES          S              1                                                                         07/02/05
+   8100      DICHK810          S              1                                                                         08/02/05
+   8200      DICHKT21          S              1                                                                         10/03/05
+   8300      D*                                                                                                         03/02/05
+   8400      D*llamados                                                                                                 01/04/22
+   8500      DVAL_BIN          PR                  Extpgm('SIR0050')                                                    01/04/22
+   8600      D wdtarje                       19A                                                                        01/04/22
+   8700      D wrcdcmp                        4A                                                                        01/04/22
+   8800      D wbindes                       12A                                                                        01/04/22
+   8900      D wbinhas                       40A                                                                        01/04/22
+   9000      D wbinpr1                       40A                                                                        01/04/22
+   9100      D wbinpr2                       40A                                                                        01/04/22
+   9200      D wbinpr3                       40A                                                                        01/04/22
+   9300      D wbinpr4                       40A                                                                        01/04/22
+   9400      D wotrcam                     1000A                                                                        06/04/22
+   9500      D*                                                                                                         12/02/04
+   9600      D*                                                                                                         18/01/05
+   9700      DWDSFEC           DS                                                                                       18/01/05
+   9800      D WFECAA                 01     02  0                                                                      18/01/05
+   9900      D WFECMM                 03     04  0                                                                      18/01/05
+  10000      D WFECDD                 05     06  0                                                                      18/01/05
+  10100      DWFECTR                  01     06  0                                                                      18/01/05
+  10200      D*                                                                                                         13/02/04
+  10300      D*           ---> DS. NADA 3                                                                               10/02/05
+  10400      D*                                                                                                         07/02/05
+  10500      DDNADA3           DS                                                                                       08/03/05
+  10600      D WNUMTE                 01     05                                                                         06/10/10
+  5770WDS V7R2M0  140418                  LISTADO FUENTE SEU                            08/11/23 09:36:24    DESANEW      PÁG.    3
+  ARCHIVO FUENTE  . . . . .  LMORENO/QRPGLESRC
+  MIEMBRO . . . . . . . . .  CER0100LUZ
+  SEQNBR*...+... 1 ...+... 2 ...+... 3 ...+... 4 ...+... 5 ...+... 6 ...+... 7 ...+... 8 ...+... 9 ...+... 0
+  10700      D WCDAGE                 06     15                                                                         11/02/05
+  10800      D WTPRED                 16     16                                                                         02/03/05
+  10900      D WIDRED                 17     17                                                                         10/02/05
+  11000      D WBLK02                 18     20                                                                         10/02/05
+  11100      D*                                                                                                         19/05/08
+  11200      D*           ---> DS. MCTADE / REFTAB21                                                                    05/02/08
+  11300      D*                                                                                                         05/02/08
+  11400      DWDSCT21          DS                                                                                       08/02/08
+  11500      D WCCT21                 01     02  0                                                                      05/02/08
+  11600      D WCTT21                 03     18                                                                         14/06/18
+  11700      D WCTA21                 01     18                                                                         08/02/08
+  11800      D*                                                                                                         18/01/05
+  11900      D*           ---> DS. CTA DEPOSITO                                                                         10/02/05
+  12000      D*                                                                                                         10/02/05
+  12100      DWDSCTA           DS                                                                                       10/02/05
+  12200      D WCOMPE                 01     02                                                                         10/02/05
+  12300      D WCTACO                 03     18                                                                         10/02/05
+  12400      D WCTADE                 01     18                                                                         10/02/05
+  12500      D*                                                                                                         10/02/05
+  12600      DWDECTO           S             03  0 INZ(*ZEROS)                                                          01/04/05
+  12700      DWPNTTI           S             04  2 INZ(*ZEROS)                                                          11/02/05
+  12800      DWPNTCA           S             04  2 INZ(*ZEROS)                                                          11/02/05
+  12900      D*                                                                                                         10/02/05
+  13000      DWVRBAS           S             15  2 INZ(*ZEROS)                                                          10/02/05
+  13100      DWLMPRO           S             15  0 INZ(*ZEROS)                                                          10/02/05
+  13200      DWDIPRO           S             15  0 INZ(*ZEROS)                                                          04/02/05
+  13300      DWVRCOM           S             15  0 INZ(*ZEROS)                                                          10/02/05
+  13400      DWPRICA           S             06  5 INZ(*ZEROS)                                                          11/02/05
+  13500      DWINLIQ           S             01    INZ(*BLANKS)                                                         14/02/05
+  13600      DWCLPRO           S             01    INZ(*BLANKS)                                                         10/03/05
+  13700      DWTIPTE           S             02  0 INZ(*BLANKS)                                                         10/03/05
+  13800      DWINRET           S             01  0 INZ(*ZEROS)                                                          22/03/05
+  13900      D*                                                                                                         03/02/05
+  14000      D WREFER          DS                                                                                       14/02/05
+  14100      D  DBINRE                 1      6  0                                                                      14/02/05
+  14200      D  DDIARE                 7      8  0                                                                      14/02/05
+  14300      D  DMESRE                 9     10  0                                                                      14/02/05
+  14400      D  DANORE                11     12  0                                                                      14/02/05
+  14500      D  DBATRE                13     15  0                                                                      14/02/05
+  14600      D  DSECRE                16     21  0                                                                      14/02/05
+  14700      D*                                                                                                         14/02/05
+  14800      DI                S             02  0                                                                      11/02/05
+  14900      DY                S             02  0                                                                      10/02/05
+  15000      D*                                                                                                         10/02/05
+  15100      IRERTAB21                                                                                                  10/03/05
+  15200      I              FILLER                      WFILLE                                                          10/03/05
+  15300      C*                                                                                                         14/09/98
+  15400      C*                  -----------------------                                                                06/11/13
+  15500      C*     --->         RUTINAS DE PRIMER ORDEN                                                                06/11/13
+  15600      C*                  -----------------------                                                                06/11/13
+  15700      C*                                                                                                         14/09/98
+  15800      C*     --->         RUTINAS PRINCIPAL                                                                      06/11/13
+  15900      C*                                                                                                         14/09/98
+  5770WDS V7R2M0  140418                  LISTADO FUENTE SEU                            08/11/23 09:36:24    DESANEW      PÁG.    4
+  ARCHIVO FUENTE  . . . . .  LMORENO/QRPGLESRC
+  MIEMBRO . . . . . . . . .  CER0100LUZ
+  SEQNBR*...+... 1 ...+... 2 ...+... 3 ...+... 4 ...+... 5 ...+... 6 ...+... 7 ...+... 8 ...+... 9 ...+... 0
+  16000      C                   EXSR      INTVAR                                                                       14/09/98
+  16100      C                   EXSR      PCSPGM                                                                       14/09/98
+  16200      C                   EXSR      ENDPGM                                                                       14/09/98
+  16300      C*                                                                                                         14/09/98
+  16400      C*    --->          LLAVES DE ACCESO                                                                       06/11/13
+  16500      C*                                                                                                         14/09/98
+  16600      C     INTVAR        BEGSR                                                                                  14/09/98
+  16700      C*                                                                                                         18/01/05
+  16800      C     KEYBAS        KLIST                                                                                  03/02/05
+  16900      C                   KFLD                    MCODES                                                         03/02/05
+  17000      C*                                                                                                         14/02/05
+  17100      C     KEYT01        KLIST                                                                                  14/02/05
+  17200      C                   KFLD                    RBANCO                                                         14/02/05
+  17300      C*                                                                                                         03/02/05
+  17400      C     KEYT06        KLIST                                                                                  03/02/05
+  17500      C                   KFLD                    RDECTO                                                         03/02/05
+  17600      C*                                                                                                         10/03/05
+  17700      C     KEYT21        KLIST                                                                                  10/03/05
+  17800      C                   KFLD                    MNUMTE                                                         10/03/05
+  17900      C*                                                                                                         10/03/05
+  18000      C     KEY810        KLIST                                                                                  08/02/05
+  18100      C                   KFLD                    CCODES                                                         08/03/05
+  18200      C                   KFLD                    CTPRED                                                         08/03/05
+  18300      C*                                                                                                         05/02/08
+  18400      C     KEY810C       KLIST                                                                                  05/02/08
+  18500      C                   KFLD                    CCODES                                                         05/02/08
+  18600      C                   KFLD                    CTPRED                                                         05/02/08
+  18700      C                   KFLD                    CCOMPE                                                         05/02/08
+  18800      C                   KFLD                    CCTACO                                                         05/02/08
+  18900      C*                                                                                                         05/02/08
+  19000      C     PLIST1        PLIST                                                                                  04/02/05
+  19100      C                   PARM                    WTARJE           19                                            04/02/05
+  19200      C                   PARM                    WCDBIN           06                                            04/02/05
+  19300      C                   PARM                    WLOTAR           02                                            04/02/05
+  19400      C                   PARM                    WINLIM           01                                            04/02/05
+  19500      C                   PARM                    WINCHK           01                                            04/02/05
+  19600      C                   PARM                    WTPPRO           01                                            04/02/05
+  19700      C*                                                                                                         14/09/98
+  19800      C                   ENDSR                                                                                  14/09/98
+  19900      C*                                                                                                         14/09/98
+  20000      C*                                                                                                         14/09/98
+  20100      C*    --->          PROCESO DEL REGISTRO                                                                   06/11/13
+  20200      C*                                                                                                         14/09/98
+  20300      C*                                                                                                         14/09/98
+  20400      C     PCSPGM        BEGSR                                                                                  14/09/98
+  20500      C*                                                                                                         14/09/98
+  20600      C                   EXSR      RDNOPE                                                                       02/02/05
+  20700      C*                                                                                                         14/09/98
+  20800      C     IRDNOPE       DOWEQ     *OFF                                                                         16/02/04
+  20900      C                   EXSR      PCSOPE                                                                       18/01/05
+  21000      C                   EXSR      RDNOPE                                                                       14/09/98
+  21100      C                   END                                                                                    14/09/98
+  21200      C*                                                                                                         14/09/98
+  5770WDS V7R2M0  140418                  LISTADO FUENTE SEU                            08/11/23 09:36:24    DESANEW      PÁG.    5
+  ARCHIVO FUENTE  . . . . .  LMORENO/QRPGLESRC
+  MIEMBRO . . . . . . . . .  CER0100LUZ
+  SEQNBR*...+... 1 ...+... 2 ...+... 3 ...+... 4 ...+... 5 ...+... 6 ...+... 7 ...+... 8 ...+... 9 ...+... 0
+  21300      C                   ENDSR                                                                                  14/09/98
+  21400      C*                                                                                                         14/09/98
+  21500      C*    --->          FINAL DEL PROGRAMA                                                                     06/11/13
+  21600      C*                                                                                                         14/09/98
+  21700      C     ENDPGM        BEGSR                                                                                  14/09/98
+  21800      C*                                                                                                         14/09/98
+  21900      C                   MOVE      *ON           *INLR                                                          16/02/04
+  22000      C*                                                                                                         14/09/98
+  22100      C                   ENDSR                                                                                  14/09/98
+  22200      C*                                                                                                         14/09/98
+  22300      C*                                                                                                         14/09/98
+  22400      C*                  ------------------------                                                               06/11/13
+  22500      C*    --->          RUTINAS DE SEGUNDO ORDEN                                                               06/11/13
+  22600      C*                  ------------------------                                                               06/11/13
+  22700      C*                                                                                                         16/02/04
+  22800      C*    --->          READ AL CEF0500A                                                                       06/11/13
+  22900      C*                                                                                                         14/09/98
+  23000      C     RDNOPE        BEGSR                                                                                  14/09/98
+  23100      C*                                                                                                         14/09/98
+  23200      C                   READ      CER0500A                               95                                    10/02/05
+  23300      C                   MOVE      *IN95         IRDNOPE                                                        16/02/04
+  23400      C*                                                                                                         14/09/98
+  23500      C                   ENDSR                                                                                  14/09/98
+  23600      C*                                                                                                         14/09/98
+  23700      C*    --->          RUTINA PROCESO REG                                                                     06/11/13
+  23800      C*                                                                                                         14/09/98
+  23900      C     PCSOPE        BEGSR                                                                                  18/01/05
+  24000      C*                                                                                                         02/03/05
+  24100      C                   EXSR      CHKTAR                                                                       02/03/05
+  24200      C                   EXSR      RTPPRO                                                                       02/03/05
+  24300      C                   EXSR      CHKBAS                                                                       08/03/05
+  24400      C                   EXSR      RLIQIM                                                                       22/03/05
+  24500      C*                                                                                                         31/08/15
+  24600      C                   IF        DTIPMO = 06 OR                                                               10/09/15
+  24700      C                             DTIPMO = 26                                                                  10/09/15
+  24800      C*                                                                                                         10/09/15
+  24900      C                   IF        %SUBST(DNADA3:19:02) <> 'RF' OR                                              31/08/15
+  25000      C                             %SUBST(DNADA3:19:02) <> 'CB'                                                 31/08/15
+  25100      C                   EXSR      RTPRED                                                                       31/08/15
+  25200      C                   ENDIF                                                                                  31/08/15
+  25300      C*                                                                                                         31/08/15
+  25400      C                   IF        DFRANQ = 'CV' AND WNUMTE <> '00000' AND                                      06/11/13
+  25500      C                             DBATRE <> 400 AND                                                            31/08/15
+  25600      C                             %SUBST(DNADA3:19:02) <> 'RF' AND                                             31/08/15
+  25700      C                             %SUBST(DNADA3:19:02) <> 'CB'                                                 31/08/15
+  25800      C*                                                                                                         11/02/05
+  25900      C                   IF        WTPPRO = 'E'                                                                 02/03/05
+  26000      C                   EXSR      CHKDES                                                                       02/03/05
+  26100      C                   ENDIF                                                                                  10/09/15
+  26200      C*                                                                                                         10/02/05
+  26300      C                   EXSR      CHKT06                                                                       02/03/05
+  26400      C*                                                                                                         02/03/05
+  26500      C                   EXSR      RVRBAS                                                                       10/02/05
+  5770WDS V7R2M0  140418                  LISTADO FUENTE SEU                            08/11/23 09:36:24    DESANEW      PÁG.    6
+  ARCHIVO FUENTE  . . . . .  LMORENO/QRPGLESRC
+  MIEMBRO . . . . . . . . .  CER0100LUZ
+  SEQNBR*...+... 1 ...+... 2 ...+... 3 ...+... 4 ...+... 5 ...+... 6 ...+... 7 ...+... 8 ...+... 9 ...+... 0
+  26600      C*                                                                                                         10/02/05
+  26700      C                   IF        WIDRED = '3'                                                                 08/03/05
+  26800      C                   EXSR      RLIQTI                                                                       08/02/05
+  26900      C                   ENDIF                                                                                  10/09/15
+  27000      C*                                                                                                         10/02/05
+  27100      C                   EXSR      RTPRED                                                                       10/02/05
+  27200      C                   EXSR      RLIQCA                                                                       10/02/05
+  27300      C*                                                                                                         11/02/05
+  27400      C                   ENDIF                                                                                  10/09/15
+  27500      C*                                                                                                         29/03/05
+  27600      C                   EXSR      RTNUPT                                                                       29/03/05
+  27700      C*                                                                                                         14/09/98
+  27800      C                   ENDIF                                                                                  10/09/15
+  27900      C*                                                                                                         10/09/15
+  28000      C                   ENDSR                                                                                  14/09/98
+  28100      C*                                                                                                         03/02/05
+  28200      C*    --->          CHAIN ESFBASIC                                                                         06/11/13
+  28300      C*                                                                                                         03/02/05
+  28400      C     CHKBAS        BEGSR                                                                                  03/02/05
+  28500      C*                                                                                                         03/02/05
+  28600      C                   EVAL      MCODES  = DCODES                                                             10/02/05
+  28700      C*                                                                                                         03/02/05
+  28800      C     KEYBAS        CHAIN     ESRBASIC                           95                                        03/02/05
+  28900      C                   MOVE      *IN95         ICHKBAS                                                        03/02/05
+  29000      C*                                                                                                         03/02/05
+  29100      C                   ENDSR                                                                                  03/02/05
+  29200      C*                                                                                                         03/02/05
+  29300      C*    --->          CHAIN REFTAB06                                                                         06/11/13
+  29400      C*                                                                                                         03/02/05
+  29500      C     CHKT06        BEGSR                                                                                  03/02/05
+  29600      C*                                                                                                         03/02/05
+  29700      C                   IF        WTPPRO = 'C'                                                                 04/02/05
+  29800      C                   EVAL      RDECTO  = MDECTO                                                             04/02/05
+  29900      C                   END                                                                                    04/02/05
+  30000      C*                                                                                                         04/02/05
+  30100      C                   IF        WTPPRO = 'D'                                                                 04/02/05
+  30200      C                   EVAL      RDECTO  = MDECDE                                                             04/02/05
+  30300      C                   END                                                                                    04/02/05
+  30400      C*                                                                                                         07/02/05
+  30500      C                   IF        WTPPRO = 'E'                                                                 07/02/05
+  30600      C                   EVAL      RDECTO  = WDECTO                                                             08/02/05
+  30700      C                   END                                                                                    07/02/05
+  30800      C*                                                                                                         07/02/05
+  30900      C     KEYT06        CHAIN     RERTAB06                           95                                        03/02/05
+  31000      C                   MOVE      *IN95         ICHKT06                                                        03/02/05
+  31100      C*                                                                                                         03/02/05
+  31200      C                   ENDSR                                                                                  03/02/05
+  31300      C*                                                                                                         07/02/05
+  31400      C*    --->          CHAIN ESFDESCU                                                                         06/11/13
+  31500      C*                                                                                                         07/02/05
+  31600      C     CHKDES        BEGSR                                                                                  07/02/05
+  31700      C*                                                                                                         07/02/05
+  31800      C                   EVAL      MCODES  = DCODES                                                             10/02/05
+  5770WDS V7R2M0  140418                  LISTADO FUENTE SEU                            08/11/23 09:36:24    DESANEW      PÁG.    7
+  ARCHIVO FUENTE  . . . . .  LMORENO/QRPGLESRC
+  MIEMBRO . . . . . . . . .  CER0100LUZ
+  SEQNBR*...+... 1 ...+... 2 ...+... 3 ...+... 4 ...+... 5 ...+... 6 ...+... 7 ...+... 8 ...+... 9 ...+... 0
+  31900      C*                                                                                                         07/02/05
+  32000      C     KEYBAS        CHAIN     ESRDESCU                           95                                        07/02/05
+  32100      C                   MOVE      *IN95         ICHKDES                                                        07/02/05
+  32200      C*                                                                                                         07/02/05
+  32300      C                   IF        ICHKDES = *OFF                                                               07/02/05
+  32400      C*                                                                                                         07/02/05
+  32500      C*    --->          COD X PNCTJE                                                                           06/11/13
+  32600      C*                                                                                                         07/02/05
+  32700      C                   IF        MINDI1  = 1                                                                  07/02/05
+  32800      C                   Z-ADD     MPROD1        WDECTO                                                         03/03/05
+  32900      C                   END                                                                                    07/02/05
+  33000      C*                                                                                                         07/02/05
+  33100      C                   END                                                                                    07/02/05
+  33200      C*                                                                                                         07/02/05
+  33300      C                   ENDSR                                                                                  07/02/05
+  33400      C*                                                                                                         08/02/05
+  33500      C*    --->          CHAIN ESL0810N                                                                         06/11/13
+  33600      C*                                                                                                         08/02/05
+  33700      C     CHK810        BEGSR                                                                                  08/02/05
+  33800      C*                                                                                                         08/02/05
+  33900      C                   EVAL      CCODES  = DCODES                                                             19/05/08
+  34000      C*                                                                                                         08/02/05
+  34100      C     KEY810        CHAIN     ESR0810C                           95                                        05/02/08
+  34200      C                   MOVE      *IN95         ICHK810                                                        08/02/05
+  34300      C*                                                                                                         08/02/05
+  34400      C                   ENDSR                                                                                  08/02/05
+  34500      C*                                                                                                         08/02/05
+  34600      C*    --->          CHAIN ESF0810C01 - NVO ENCAD.                                                          06/11/13
+  34700      C*                                                                                                         05/02/08
+  34800      C     CHK810C       BEGSR                                                                                  05/02/08
+  34900      C*                                                                                                         05/02/08
+  35000      C                   MOVE      DCODES        CCODES                                                         08/02/08
+  35100      C                   MOVE      WTPRED        CTPRED                                                         05/02/08
+  35200      C                   MOVE      WCCT21        CCOMPE                                                         05/02/08
+  35300      C                   MOVE      WCTT21        CCTACO                                                         05/02/08
+  35400      C*                                                                                                         05/02/08
+  35500      C     KEY810C       CHAIN     ESK0810C                           95                                        05/02/08
+  35600      C                   MOVE      *IN95         ICHK810                                                        05/02/08
+  35700      C*                                                                                                         05/02/08
+  35800      C                   ENDSR                                                                                  05/02/08
+  35900      C*                                                                                                         03/02/05
+  36000      C*                                                                                                         19/05/08
+  36100      C*    --->          RUTINA LIQ. TASA INTERCAMBIO                                                           06/11/13
+  36200      C*                                                                                                         03/02/05
+  36300      C     RLIQTI        BEGSR                                                                                  08/02/05
+  36400      C*                                                                                                         04/02/05
+  36500      C                   EVAL      WVRCOM = *ZEROS                                                              10/02/05
+  36600      C                   EVAL      WPNTTI = RPNTJE * 100                                                        11/02/05
+  36700      C*                                                                                                         10/02/05
+  36800      C                   IF        WTPPRO = 'C'                                                                 04/02/05
+  36900      C                   EVAL (H)  WVRCOM = WVRBAS * RPNTJE                                                     10/02/05
+  37000      C                   EVAL      DVALDE = WVRCOM                                                              10/02/05
+  37100      C                   EVAL      WPNTTI = RPNTJE * 100                                                        11/02/05
+  5770WDS V7R2M0  140418                  LISTADO FUENTE SEU                            08/11/23 09:36:24    DESANEW      PÁG.    8
+  ARCHIVO FUENTE  . . . . .  LMORENO/QRPGLESRC
+  MIEMBRO . . . . . . . . .  CER0100LUZ
+  SEQNBR*...+... 1 ...+... 2 ...+... 3 ...+... 4 ...+... 5 ...+... 6 ...+... 7 ...+... 8 ...+... 9 ...+... 0
+  37200      C                   END                                                                                    04/02/05
+  37300      C*                                                                                                         04/02/05
+  37400      C                   IF        WTPPRO = 'D'                                                                 04/02/05
+  37500      C                   EVAL (H)  WVRCOM = WVRBAS * RPNTJE                                                     10/02/05
+  37600      C                   EVAL      DVALDE = WVRCOM                                                              10/02/05
+  37700      C                   EVAL      WPNTTI = RPNTJE * 100                                                        11/02/05
+  37800      C                   END                                                                                    04/02/05
+  37900      C*                                                                                                         04/02/05
+  38000      C                   IF        WTPPRO = 'E'                                                                 04/02/05
+  38100      C*                                                                                                         10/02/05
+  38200      C                   IF        MINDI1 = 2 AND                                                               13/02/08
+  38300      C                             DINDPC = *BLANKS                                                             13/02/08
+  38400      C                   EVAL (H)  WVRCOM = MPROD1                                                              10/02/05
+  38500      C                   EVAL      DVALDE = WVRCOM                                                              10/02/05
+  38600      C                   EVAL      WPNTTI = *ZEROS                                                              11/02/05
+  38700      C                   END                                                                                    10/02/05
+  38800      C*                                                                                                         10/02/05
+  38900      C                   IF        MINDI1 = 1 AND                                                               13/02/08
+  39000      C                             DINDPC = *BLANKS                                                             13/02/08
+  39100      C                   EVAL (H)  WVRCOM = WVRBAS * RPNTJE                                                     10/02/05
+  39200      C                   EVAL      DVALDE = WVRCOM                                                              10/02/05
+  39300      C                   EVAL      WPNTTI = RPNTJE * 100                                                        11/02/05
+  39400      C                   END                                                                                    10/02/05
+  39500      C*                                                                                                         11/02/05
+  39600      C                   END                                                                                    11/02/05
+  39700      C*                                                                                                         10/02/05
+  39800      C                   EVAL      DPORDT = WPNTTI                                                              11/02/05
+  39900      C*                                                                                                         10/02/05
+  40000      C                   IF        DBINDE = 450724                                                              11/02/05
+  40100      C                   EVAL (H)  WVRCOM = DVALTO * 0.01                                                       11/02/05
+  40200      C                   EVAL      DVALDE = WVRCOM                                                              11/02/05
+  40300      C                   END                                                                                    11/02/05
+  40400      C*                                                                                                         11/02/05
+  40500      C                   EXSR      CHKT08                                                                       10/03/05
+  40600      C*                                                                                                         10/03/05
+  40700      C                   IF        WCLPRO  = 'S'                                                                31/05/06
+  40800      C                   EVAL      DVALDE = *ZEROS                                                              10/03/05
+  40900      C                   END                                                                                    10/03/05
+  41000      C*                                                                                                         10/03/05
+  41100      C                   EVAL      DVALIN = DVALTO - DVALDE                                                     11/02/05
+  41200      C*                                                                                                         03/02/05
+  41300      C                   ENDSR                                                                                  03/02/05
+  41400      C*                                                                                                         08/02/05
+  41500      C*                                                                                                         08/02/05
+  41600      C*    --->          RUTINA LIQ. COMIS. ADQ.                                                                06/11/13
+  41700      C*                                                                                                         08/02/05
+  41800      C     RLIQCA        BEGSR                                                                                  08/02/05
+  41900      C*                                                                                                         08/02/05
+  42000      C                   EVAL      WVRCOM = *ZEROS                                                              04/03/05
+  42100      C                   EVAL      WPNTCA = *ZEROS                                                              13/02/08
+  42200      C*                                                                                                         04/03/05
+  42300      C                   IF        ICHK810 = *OFF                                                               05/02/08
+  42400      C*                                                                                                         10/02/05
+  5770WDS V7R2M0  140418                  LISTADO FUENTE SEU                            08/11/23 09:36:24    DESANEW      PÁG.    9
+  ARCHIVO FUENTE  . . . . .  LMORENO/QRPGLESRC
+  MIEMBRO . . . . . . . . .  CER0100LUZ
+  SEQNBR*...+... 1 ...+... 2 ...+... 3 ...+... 4 ...+... 5 ...+... 6 ...+... 7 ...+... 8 ...+... 9 ...+... 0
+  42500      C                   IF        WIDRED = '3'                                                                 10/02/05
+  42600      C*                                                                                                         04/03/05
+  42700      C                   MOVE      CCOMPE        WCOMPE                                                         11/02/05
+  42800      C                   MOVE      CCTACO        WCTACO                                                         11/02/05
+  42900      C*                                                                                                         10/02/05
+  43000      C                   EXSR      RTNREF                                                                       14/02/05
+  43100      C*                                                                                                         14/02/05
+  43200      C                   EVAL      DCTADE  = WCTADE                                                             10/02/05
+  43300      C*                                                                                                         10/02/05
+  43400      C                   END                                                                                    10/02/05
+  43500      C*                                                                                                         14/02/05
+  43600      C                   EVAL      WCTADE  = DCTADE                                                             14/02/05
+  43700      C                   EXSR      CHKT01                                                                       14/02/05
+  43800      C*                                                                                                         14/02/05
+  43900      C                   IF        WINLIQ  = 'Y'                                                                14/02/05
+  44000      C*                                                                                                         10/02/05
+  44100      C                   SELECT                                                                                 10/02/05
+  44200      C*                                                                                                         10/02/05
+  44300      C                   WHEN      WTPPRO = 'C'                                                                 10/02/05
+  44400      C*                                                                                                         08/02/05
+  44500      C                   IF        CINCCR  = 0                                                                  10/02/05
+  44600      C                   EVAL      WPNTCA  = *ZEROS                                                             11/02/05
+  44700      C                   EVAL (H)  WVRCOM  = CDSCCR                                                             10/02/05
+  44800      C                   EVAL      DVRADQ  = WVRCOM                                                             23/02/05
+  44900      C                   END                                                                                    10/02/05
+  45000      C*                                                                                                         10/02/05
+  45100      C                   IF        CINCCR  = 1                                                                  10/02/05
+  45200      C                   EVAL      WPNTCA  = CDSCCR                                                             11/02/05
+  45300      C                   EVAL (H)  WVRCOM  = WVRBAS * CDSCCR / 100                                              10/02/05
+  45400      C                   EVAL      DVRADQ  = WVRCOM                                                             23/02/05
+  45500      C                   END                                                                                    10/02/05
+  45600      C*                                                                                                         10/02/05
+  45700      C                   IF        CINCCR  = 2                                                                  10/02/05
+  45800      C                   EVAL      WPNTCA  = *ZEROS                                                             11/02/05
+  45900      C                   EVAL (H)  WVRCOM  = WVRBAS * CDSCCR / 100                                              10/02/05
+  46000      C                   EVAL      WVRCOM  = WVRCOM + CVFCCR                                                    10/02/05
+  46100      C                   EVAL      DVRADQ  = WVRCOM                                                             23/02/05
+  46200      C                   END                                                                                    10/02/05
+  46300      C*                                                                                                         08/02/05
+  46400      C                   WHEN      WTPPRO = 'D'                                                                 10/02/05
+  46500      C*                                                                                                         10/02/05
+  46600      C                   IF        CINCDB  = 0                                                                  10/02/05
+  46700      C                   EVAL      WPNTCA  = *ZEROS                                                             11/02/05
+  46800      C                   EVAL (H)  WVRCOM  = CDSCDB                                                             10/02/05
+  46900      C                   EVAL      DVRADQ  = WVRCOM                                                             23/02/05
+  47000      C                   END                                                                                    10/02/05
+  47100      C*                                                                                                         10/02/05
+  47200      C                   IF        CINCDB  = 1                                                                  10/02/05
+  47300      C                   EVAL      WPNTCA  = CDSCDB                                                             11/02/05
+  47400      C                   EVAL (H)  WVRCOM  = WVRBAS * CDSCDB / 100                                              10/02/05
+  47500      C                   EVAL      DVRADQ  = WVRCOM                                                             23/02/05
+  47600      C                   END                                                                                    10/02/05
+  47700      C*                                                                                                         10/02/05
+  5770WDS V7R2M0  140418                  LISTADO FUENTE SEU                            08/11/23 09:36:24    DESANEW      PÁG.   10
+  ARCHIVO FUENTE  . . . . .  LMORENO/QRPGLESRC
+  MIEMBRO . . . . . . . . .  CER0100LUZ
+  SEQNBR*...+... 1 ...+... 2 ...+... 3 ...+... 4 ...+... 5 ...+... 6 ...+... 7 ...+... 8 ...+... 9 ...+... 0
+  47800      C                   IF        CINCDB  = 2                                                                  10/02/05
+  47900      C                   EVAL      WPNTCA  = *ZEROS                                                             11/02/05
+  48000      C                   EVAL (H)  WVRCOM  = WVRBAS * CDSCDB / 100                                              10/02/05
+  48100      C                   EVAL      WVRCOM  = WVRCOM + CVFCDB                                                    10/02/05
+  48200      C                   EVAL      DVRADQ  = WVRCOM                                                             23/02/05
+  48300      C                   END                                                                                    10/02/05
+  48400      C*                                                                                                         08/02/05
+  48500      C                   WHEN      WTPPRO = 'E'                                                                 10/02/05
+  48600      C*                                                                                                         10/02/05
+  48700      C                   IF        CINCEL  = 0 AND                                                              13/02/08
+  48800      C                             DINDPC = *BLANKS                                                             13/02/08
+  48900      C                   EVAL      WPNTCA  = *ZEROS                                                             11/02/05
+  49000      C                   EVAL (H)  WVRCOM  = CDSCEL                                                             10/02/05
+  49100      C                   EVAL      DVRADQ  = WVRCOM                                                             23/02/05
+  49200      C                   END                                                                                    10/02/05
+  49300      C*                                                                                                         10/02/05
+  49400      C                   IF        CINCEL  = 1 AND                                                              13/02/08
+  49500      C                             DINDPC = *BLANKS                                                             13/02/08
+  49600      C                   EVAL      WPNTCA  = CDSCEL                                                             11/02/05
+  49700      C                   EVAL (H)  WVRCOM  = WVRBAS * CDSCEL / 100                                              10/02/05
+  49800      C                   EVAL      DVRADQ  = WVRCOM                                                             23/02/05
+  49900      C                   END                                                                                    10/02/05
+  50000      C*                                                                                                         10/02/05
+  50100      C                   IF        CINCEL  = 2 AND                                                              13/02/08
+  50200      C                             DINDPC = *BLANKS                                                             13/02/08
+  50300      C                   EVAL      WPNTCA  = *ZEROS                                                             11/02/05
+  50400      C                   EVAL (H)  WVRCOM  = WVRBAS * CDSCEL / 100                                              10/02/05
+  50500      C                   EVAL      WVRCOM  = WVRCOM + CVFCEL                                                    10/02/05
+  50600      C                   EVAL      DVRADQ  = WVRCOM                                                             23/02/05
+  50700      C                   END                                                                                    10/02/05
+  50800      C*                                                                                                         08/02/05
+  50900      C                   ENDSL                                                                                  11/02/05
+  51000      C*                                                                                                         11/02/05
+  51100      C                   EVAL      DPCADQ  = WPNTCA                                                             23/02/05
+  51200      C                   EVAL      DVALDS  = DVALTO - DVRADQ                                                    03/03/05
+  51300      C*                                                                                                         14/02/05
+  51400      C                   ELSE                                                                                   14/02/05
+  51500      C*                                                                                                         14/02/05
+  51600      C                   EVAL      DPCADQ  = *ZEROS                                                             23/02/05
+  51700      C                   EVAL      DVRADQ  = *ZEROS                                                             23/02/05
+  51800      C                   EVAL      DVALDS  = *ZEROS                                                             03/03/05
+  51900      C*                                                                                                         14/02/05
+  52000      C                   END                                                                                    14/02/05
+  52100      C*                                                                                                         04/03/05
+  52200      C                   ELSE                                                                                   04/03/05
+  52300      C*                                                                                                         04/03/05
+  52400      C                   EVAL      DPCADQ  = *ZEROS                                                             04/03/05
+  52500      C                   EVAL      DVRADQ  = *ZEROS                                                             04/03/05
+  52600      C                   EVAL      DVALDS  = *ZEROS                                                             04/03/05
+  52700      C                   EVAL      DBINRE  = *ZEROS                                                             04/03/05
+  52800      C                   EVAL      DCTADE  = *ZEROS                                                             04/03/05
+  52900      C*                                                                                                         04/03/05
+  53000      C                   END                                                                                    04/03/05
+  5770WDS V7R2M0  140418                  LISTADO FUENTE SEU                            08/11/23 09:36:24    DESANEW      PÁG.   11
+  ARCHIVO FUENTE  . . . . .  LMORENO/QRPGLESRC
+  MIEMBRO . . . . . . . . .  CER0100LUZ
+  SEQNBR*...+... 1 ...+... 2 ...+... 3 ...+... 4 ...+... 5 ...+... 6 ...+... 7 ...+... 8 ...+... 9 ...+... 0
+  53100      C*                                                                                                         08/02/05
+  53200      C                   ENDSR                                                                                  08/02/05
+  53300      C*                                                                                                         22/03/05
+  53400      C*                                                                                                         22/03/05
+  53500      C*    --->          RUTINA LIQ. IMPUESTOS                                                                  06/11/13
+  53600      C*                                                                                                         22/03/05
+  53700      C     RLIQIM        BEGSR                                                                                  22/03/05
+  53800      C*                                                                                                         22/03/05
+  53900      C                   IF        (ICHKBAS = *OFF) AND                                                         29/03/05
+  54000      C                             (DFRANQ <> 'AX'  OR WNUMTE = '00000')                                        06/10/10
+  54100      C*                                                                                                         22/03/05
+  54200      C*    --->          LIQ. VALOR RETEFUENTE                                                                  06/11/13
+  54300      C*                                                                                                         22/03/05
+  54400      C                   EVAL      WINRET  = MLINA9                                                             22/03/05
+  54500      C*                                                                                                         22/03/05
+  54600      C                   EVAL (H)  DVRETC  = DVALCO * 1.5 / 100                                                 22/03/05
+  54700      C*                                                                                                         22/03/05
+  54800      C                   IF        WINRET  = 7                                                                  22/03/05
+  54900      C                   EVAL (H)  DVRETC  = DVALCO * 1.0 / 100                                                 22/03/05
+  55000      C                   END                                                                                    22/03/05
+  55100      C*                                                                                                         22/03/05
+  55200      C                   IF        WINRET  = 8                                                                  22/03/05
+  55300      C                   EVAL (H)  DVRETC  = DVALCO * 0.1 / 100                                                 22/03/05
+  55400      C                   END                                                                                    22/03/05
+  55500      C*                                                                                                         22/03/05
+  55600      C                   IF        WINRET  = 9                                                                  22/03/05
+  55700      C                   EVAL (H)  DVRETC  = DVALCO * 0                                                         22/03/05
+  55800      C                   END                                                                                    22/03/05
+  55900      C*                                                                                                         22/03/05
+  56000      C*    --->          LIQ. VALOR RETE ICA                                                                    06/11/13
+  56100      C*                                                                                                         22/03/05
+  56200      C                   MOVE      MPRINC        WPRICA                                                         22/03/05
+  56300      C                   EVAL (H)  DVRICA  = DVALCO * WPRICA                                                    22/03/05
+  56400      C*                                                                                                         22/03/05
+  56500      C*    --->          TX AVANCE CENCOSUD EXENTAS DE ICA X SOL COLPATRI                                       19/05/16
+  56600      C*                                                                                                         19/05/16
+  56700      C                   IF        DTIPMO = 06 AND                                                              19/05/16
+  56800      C                             %SUBST(DNADA3:19:02) = '62'                                                  19/05/16
+  56900      C                   EVAL      DVRICA = *ZEROS                                                              19/05/16
+  57000      C                   ENDIF                                                                                  19/05/16
+  57100      C*                                                                                                         19/05/16
+  57200      C                   END                                                                                    22/03/05
+  57300      C*                                                                                                         22/03/05
+  57400      C*    --->          LIQ. VALOR RETE IVA DEL 15%                                                            06/11/13
+  57500      C*                                                                                                         22/03/05
+  57600      C                   EVAL (H)  DVRETI  = DVRIVA * 0.15                                                      16/03/13
+  57700      C*                                                                                                         22/03/05
+  57800      C*                                                                                                         22/03/05
+  57900      C                   ENDSR                                                                                  22/03/05
+  58000      C*                                                                                                         22/03/05
+  58100      C*                                                                                                         04/02/05
+  58200      C*    --->          RUTINA TIPO PRODUCTO                                                                   06/11/13
+  58300      C*                                                                                                         04/02/05
+  5770WDS V7R2M0  140418                  LISTADO FUENTE SEU                            08/11/23 09:36:24    DESANEW      PÁG.   12
+  ARCHIVO FUENTE  . . . . .  LMORENO/QRPGLESRC
+  MIEMBRO . . . . . . . . .  CER0100LUZ
+  SEQNBR*...+... 1 ...+... 2 ...+... 3 ...+... 4 ...+... 5 ...+... 6 ...+... 7 ...+... 8 ...+... 9 ...+... 0
+  58400      C     RTPPRO        BEGSR                                                                                  04/02/05
+  58500      C*                                                                                                         04/02/05
+  58600      C                   CALL      'SI0058'      PLIST1                                                         19/04/05
+  58700      C*                                                                                                         07/02/05
+  58800      C                   ENDSR                                                                                  04/02/05
+  58900      C*                                                                                                         04/02/05
+  59000      C*    --->          RUTINA VALOR BASE                                                                      06/11/13
+  59100      C*                                                                                                         04/02/05
+  59200      C     RVRBAS        BEGSR                                                                                  10/02/05
+  59300      C*                                                                                                         04/02/05
+  59400      C                   EVAL      WVRBAS = *ZEROS                                                              10/02/05
+  59500      C                   EVAL      WLMPRO = *ZEROS                                                              10/02/05
+  59600      C                   EVAL      WDIPRO = *ZEROS                                                              10/02/05
+  59700      C*                                                                                                         10/02/05
+  59800      C                   IF        DVALPR > *ZEROS                                                              10/02/05
+  59900       *                                                                                                         21/03/19
+  60000  001 C                   IF        MDEDUC = 1                                                                   21/03/19
+  60100      C                   EVAL      WVRBAS = DVALCO                                                              21/03/19
+  60200  001 C                   ENDIF                                                                                  21/03/19
+  60300       *                                                                                                         21/03/19
+  60400  001 C                   IF        MDEDUC = 2                                                                   15/02/19
+  60500      C                   EVAL      WVRBAS = DVALCO + DVALPR                                                     10/02/05
+  60600  001 C                   ENDIF                                                                                  15/02/19
+  60700      C*                                                                                                         04/02/05
+  60800      C                   IF        (MTIPNE >= 3000 AND MTIPNE <=3299) OR                                        08/03/05
+  60900      C                             (MTIPNE = 4511) OR (DINCHB = 1)                                              09/08/07
+  61000      C                   EVAL      WVRBAS = DVALCO                                                              10/02/05
+  61100      C                   END                                                                                    11/02/05
+  61200      C*                                                                                                         10/02/05
+  61300      C                   ELSE                                                                                   10/02/05
+  61400      C*                                                                                                         10/02/05
+  61500      C                   EVAL      WVRBAS = DVALCO                                                              10/02/05
+  61600      C*                                                                                                         10/02/05
+  61700      C                   END                                                                                    10/02/05
+  61800      C*                                                                                                         04/02/05
+  61900      C                   ENDSR                                                                                  04/02/05
+  62000      C*                                                                                                         08/02/05
+  62100      C*                                                                                                         07/02/05
+  62200      C*    --->          RUTINA UPDATE CEF0500A                                                                 06/11/13
+  62300      C*                                                                                                         07/02/05
+  62400      C     RTNUPT        BEGSR                                                                                  07/02/05
+  62500      C*                                                                                                         07/02/05
+  62600       *GR                                                                                                       17/09/18
+  62700      C                   EXSR      RIMPGR                                                                       17/09/18
+  62800       *FIN                                                                                                      17/09/18
+  62900      C                   EXSR      VALMIP                                                                       12/09/17
+  63000      C                   UPDATE    CER0500A                                                                     10/02/05
+  63100      C*                                                                                                         07/02/05
+  63200      C                   ENDSR                                                                                  07/02/05
+  63300      C*                                                                                                         10/02/05
+  63400      C*    --->          RUTINA OBTIENE TIPO PRODUCTO                                                           06/11/13
+  63500      C*                                                                                                         10/02/05
+  63600      C     CHKTAR        BEGSR                                                                                  10/02/05
+  5770WDS V7R2M0  140418                  LISTADO FUENTE SEU                            08/11/23 09:36:24    DESANEW      PÁG.   13
+  ARCHIVO FUENTE  . . . . .  LMORENO/QRPGLESRC
+  MIEMBRO . . . . . . . . .  CER0100LUZ
+  SEQNBR*...+... 1 ...+... 2 ...+... 3 ...+... 4 ...+... 5 ...+... 6 ...+... 7 ...+... 8 ...+... 9 ...+... 0
+  63700      C*                                                                                                         10/02/05
+  63800      C                   MOVEA     DTARJE        NUM                                                            10/02/05
+  63900      C                   Z-ADD     1             I                                                              10/02/05
+  64000      C                   Z-ADD     1             Y                                                              10/02/05
+  64100      C                   MOVE      *BLANKS       NUE                                                            10/02/05
+  64200      C*                                                                                                         10/02/05
+  64300      C     I             DOWLE     19                                                                           10/02/05
+  64400      C     NUM(I)        ANDEQ     '0'                                                                          11/02/05
+  64500      C                   ADD       1             I                                                              10/02/05
+  64600      C                   END                                                                                    10/02/05
+  64700      C*                                                                                                         10/02/05
+  64800      C     I             DOWLE     19                                                                           10/02/05
+  64900      C                   MOVE      NUM(I)        NUE(Y)                                                         10/02/05
+  65000      C                   ADD       1             I                                                              10/02/05
+  65100      C                   ADD       1             Y                                                              10/02/05
+  65200      C                   ENDDO                                                                                  10/02/05
+  65300      C*                                                                                                         10/02/05
+  65400      C                   MOVEA     NUE           WTARJE           19                                            10/02/05
+  65500      C*                                                                                                         10/02/05
+  65600      C                   ENDSR                                                                                  10/02/05
+  65700      C*                                                                                                         10/02/05
+  65800      C*    --->          RUTINA TIPO DE RED                                                                     06/11/13
+  65900      C*                                                                                                         10/02/05
+  66000      C     RTPRED        BEGSR                                                                                  10/02/05
+  66100      C*                                                                                                         08/03/05
+  66200      C                   EVAL      CTPRED  = 1                                                                  08/03/05
+  66300      C*                                                                                                         10/02/05
+  66400      C                   IF        WIDRED  = '3'                                                                10/02/05
+  66500      C                   EVAL      CTPRED  = 2                                                                  08/03/05
+  66600      C                   END                                                                                    10/02/05
+  66700      C*                                                                                                         10/02/05
+  66800      C     WNUMTE        IFNE      '99902'                                                                      06/10/10
+  66900      C                   EXSR      CHKT21                                                                       10/03/05
+  67000      C                   IF        WTIPTE  = 5                                                                  11/03/05
+  67100      C                   EVAL      CTPRED  = 4                                                                  11/03/05
+  67200      C                   END                                                                                    11/03/05
+  67300      C                   END                                                                                    11/03/05
+  67400      C*                                                                                                         10/02/05
+  67500      C                   IF        DFGPAG  = 'Y'                                                                10/02/05
+  67600      C                   EVAL      CTPRED  = 5                                                                  08/03/05
+  67700      C                   END                                                                                    10/02/05
+  67800      C*                                                                                                         10/02/05
+  67900      C                   IF        WCDAGE > *ZEROS                                                              02/04/05
+  68000      C                   IF        (MTIPNE >= 3000 AND MTIPNE <=3299) OR                                        08/03/05
+  68100      C                             (MTIPNE = 4511) OR (MTIPTE = 7011) OR                                        02/11/06
+  68200      C                             (MTIPNE = 4722)                                                              02/11/06
+  68300      C                   EVAL      CTPRED = 6                                                                   08/03/05
+  68400      C                   END                                                                                    10/02/05
+  68500      C                   END                                                                                    10/02/05
+  68600      C*                                                                                                         02/03/05
+  68700      C                   MOVE      CTPRED        WTPRED                                                         08/03/05
+  68800      C*                                                                                                         05/02/08
+  68900      C*                  IF        WIDRED  = '1'  OR                                                            19/05/08
+  5770WDS V7R2M0  140418                  LISTADO FUENTE SEU                            08/11/23 09:36:24    DESANEW      PÁG.   14
+  ARCHIVO FUENTE  . . . . .  LMORENO/QRPGLESRC
+  MIEMBRO . . . . . . . . .  CER0100LUZ
+  SEQNBR*...+... 1 ...+... 2 ...+... 3 ...+... 4 ...+... 5 ...+... 6 ...+... 7 ...+... 8 ...+... 9 ...+... 0
+  69000      C*                            WIDRED  = '4'                                                                19/05/08
+  69100      C                   IF        WTPRED  = '1'  OR                                                            19/05/08
+  69200      C                             WTPRED  = '4'                                                                19/05/08
+  69300      C                   EXSR      CHK810C                                                                      05/02/08
+  69400      C                   ELSE                                                                                   05/02/08
+  69500      C                   EXSR      CHK810                                                                       05/02/08
+  69600      C                   END                                                                                    05/02/08
+  69700      C*                                                                                                         10/02/05
+  69800      C                   ENDSR                                                                                  10/02/05
+  69900      C*                                                                                                         14/02/05
+  70000      C*    --->          GENERA NUMERO REF. NAL                                                                 06/11/13
+  70100      C*                                                                                                         14/02/05
+  70200      C     RTNREF        BEGSR                                                                                  14/02/05
+  70300      C*                                                                                                         14/02/05
+  70400      C                   EXSR      CHKT01                                                                       14/02/05
+  70500      C*                                                                                                         14/02/05
+  70600      C                   MOVE      WREFER        XREFER           21                                            14/02/05
+  70700      C                   MOVE      *BLANKS       XDIGRE            1                                            14/02/05
+  70800      C                   CALL      'BA0435'                                                                     14/02/05
+  70900      C                   PARM                    XREFER                                                         14/02/05
+  71000      C                   PARM                    XDIGRE                                                         14/02/05
+  71100      C                   MOVE      XDIGRE        DDIGRE                                                         14/02/05
+  71200      C*                                                                                                         14/02/05
+  71300      C*                                                                                                         14/02/05
+  71400      C                   ENDSR                                                                                  14/02/05
+  71500      C*                                                                                                         14/02/05
+  71600      C*    --->          CHAIN REFTAB01                                                                         06/11/13
+  71700      C*                                                                                                         14/02/05
+  71800      C     CHKT01        BEGSR                                                                                  14/02/05
+  71900      C*                                                                                                         14/02/05
+  72000      C                   MOVE      WCOMPE        RBANCO                                                         14/02/05
+  72100      C*                                                                                                         14/02/05
+  72200      C     KEYT01        CHAIN     RERTAB01                           95                                        14/02/05
+  72300      C                   MOVE      *IN95         ICHKT01                                                        14/02/05
+  72400      C*                                                                                                         14/02/05
+  72500      C                   IF        ICHKT01 = *OFF                                                               14/02/05
+  72600      C                   EVAL      WINLIQ  = %SUBST(RPRINT:02:01)                                               14/02/05
+  72700      C                   EVAL      DBINRE = RCBCLA                                                              14/02/05
+  72800      C                   END                                                                                    14/02/05
+  72900      C*                                                                                                         14/02/05
+  73000      C                   ENDSR                                                                                  14/02/05
+  73100      C*                                                                                                         10/03/05
+  73200      C*    --->          CHAIN SWFTAB08 TAB23                                                                   01/04/22
+  73300      C*                                                                                                         10/03/05
+  73400      C     CHKT08        BEGSR                                                                                  10/03/05
+  73500      C*                                                                                                         10/03/05
+  73600      C                   EXSR      VALBIN                                                                       01/04/22
+  73700      C                   EVAL      WCLPRO  = *BLANKS                                                            20/04/05
+  73800      C*                                                                                                         20/04/05
+  73900      C                   IF        ICHKT08 = *OFF                                                               10/03/05
+  74000      C                   EVAL      WCLPRO  = %SUBST(wotrcamb:12:01)                                             05/04/22
+  74100      C                   END                                                                                    10/03/05
+  74200      C*                                                                                                         10/03/05
+  5770WDS V7R2M0  140418                  LISTADO FUENTE SEU                            08/11/23 09:36:24    DESANEW      PÁG.   15
+  ARCHIVO FUENTE  . . . . .  LMORENO/QRPGLESRC
+  MIEMBRO . . . . . . . . .  CER0100LUZ
+  SEQNBR*...+... 1 ...+... 2 ...+... 3 ...+... 4 ...+... 5 ...+... 6 ...+... 7 ...+... 8 ...+... 9 ...+... 0
+  74300      C                   ENDSR                                                                                  10/03/05
+  74400      C*                                                                                                         10/03/05
+  74500      C*    --->          CHAIN REFTAB21                                                                         06/11/13
+  74600      C*                                                                                                         10/03/05
+  74700      C     CHKT21        BEGSR                                                                                  10/03/05
+  74800      C*                                                                                                         10/03/05
+  74900      C                   EVAL      MNUMTE  =  WNUMTE                                                            10/03/05
+  75000      C                   MOVE      *ZEROS        WTIPTE                                                         19/05/08
+  75100      C                   MOVE      *ZEROS        WCTA21                                                         20/05/08
+  75200      C*                                                                                                         10/03/05
+  75300      C     KEYT21        CHAIN     RERTAB21                           95                                        10/03/05
+  75400      C                   MOVE      *IN95         ICHKT21                                                        10/03/05
+  75500      C*                                                                                                         10/03/05
+  75600      C                   IF        ICHKT21 = *OFF                                                               10/03/05
+  75700      C                   EVAL      WTIPTE  = MTIPTE                                                             10/03/05
+  75800      C                   MOVE      MCTADE        WCTA21                                                         08/02/08
+  75900      C                   ELSE                                                                                   20/05/08
+  76000      C                   EXCEPT    DETA1                                                                        20/05/08
+  76100      C                   END                                                                                    10/03/05
+  76200      C*                                                                                                         07/06/17
+  76300      C                   ENDSR                                                                                  07/06/17
+  76400                                                                                                                 17/09/18
+  76500       *GR                                                                                                       17/09/18
+  76600      C     RIMPGR        BEGSR                                                                                  17/09/18
+  76700      C*                                                                                                         17/09/18
+  76800      C                   IF        %SUBST(DNADA3:19:02) = 'GR'                                                  17/09/18
+  76900      C                   EVAL      DVRETC = *ZEROS                                                              17/09/18
+  77000      C                   EVAL      DVRETI = *ZEROS                                                              17/09/18
+  77100      C                   EVAL      DVRICA = *ZEROS                                                              17/09/18
+  77200      C                   EVAL      DVRIVA = *ZEROS                                                              13/02/19
+  77300      C                   EXSR      CHK810                                                                       17/09/18
+  77400      C*                                                                                                         17/09/18
+  77500      C*    --->          RUTINA LIQ. TASA INTERCAMBIO GR                                                        17/09/18
+  77600      C*                                                                                                         17/09/18
+  77700      C                   MOVE      DFRANQ        WCDFRQP                                                        17/09/18
+  77800      C                   MOVE      DBINDE        WCDBINP                                                        17/09/18
+  77900      C                   MOVE      WTPPRO        WTPLINP                                                        17/09/18
+  78000      C                   MOVE      DCODES        WCODESP                                                        17/09/18
+  78100      C                   MOVE      DVALCO        WVALCOP                                                        17/09/18
+  78200      C                   MOVE      DVALPR        WVALPRP                                                        17/09/18
+  78300      C                   MOVE      DPEMOD        WMDTRAP                                                        17/09/18
+  78400      C                   MOVE      DINCHB        WINDCBP                                                        17/09/18
+  78500      C                   MOVE      DCODOF        WDCDCMP                                                        17/09/18
+  78600      C                   MOVE      *BLANKS       WCDTINP                                                        17/09/18
+  78700      C                   MOVE      *BLANKS       WVRTINP                                                        17/09/18
+  78800      C*                                                                                                         17/09/18
+  78900      C                   CALL      'CER0326'                                                                    17/09/18
+  79000      C                   PARM                    WCDFRQP          02                                            17/09/18
+  79100      C                   PARM                    WCDBINP          06                                            17/09/18
+  79200      C                   PARM                    WTPLINP          01                                            17/09/18
+  79300      C                   PARM                    WCODESP          10                                            17/09/18
+  79400      C                   PARM                    WVALCOP          09                                            17/09/18
+  79500      C                   PARM                    WVALPRP          09                                            17/09/18
+  5770WDS V7R2M0  140418                  LISTADO FUENTE SEU                            08/11/23 09:36:24    DESANEW      PÁG.   16
+  ARCHIVO FUENTE  . . . . .  LMORENO/QRPGLESRC
+  MIEMBRO . . . . . . . . .  CER0100LUZ
+  SEQNBR*...+... 1 ...+... 2 ...+... 3 ...+... 4 ...+... 5 ...+... 6 ...+... 7 ...+... 8 ...+... 9 ...+... 0
+  79600      C                   PARM                    WMDTRAP          02                                            17/09/18
+  79700      C                   PARM                    WINDCBP          01                                            17/09/18
+  79800      C                   PARM                    WDCDCMP          04                                            17/09/18
+  79900      C                   PARM                    WCDTINP          05                                            17/09/18
+  80000      C                   PARM                    WVRTINP          07                                            17/09/18
+  80100      C*                                                                                                         17/09/18
+  80200      C                   IF        WVRTINP >= *ZEROS                                                            12/02/19
+  80300      C*                                                                                                         17/09/18
+  80400      C                   MOVE      WCDTINP       DPORDT                                                         17/09/18
+  80500      C                   MOVE      WVRTINP       DVALDE                                                         17/09/18
+  80600      C*                                                                                                         17/09/18
+  80700      C                   EVAL      DVALIN = DVALTO - DVALDE                                                     17/09/18
+  80800      C*                                                                                                         17/09/18
+  80900      C                   ENDIF                                                                                  17/09/18
+  81000      C                   ENDIF                                                                                  17/09/18
+  81100      C*                                                                                                         17/09/18
+  81200      C                   ENDSR                                                                                  17/09/18
+  81300       *FIN                                                                                                      17/09/18
+  81400                                                                                                                 17/09/18
+  81500      C*                                                                                                         07/06/17
+  81600      C*    --->          VALIDA SI TX PERTENECE A MIEMBROS PRINCIPALES                                          07/06/17
+  81700      C*                                                                                                         07/06/17
+  81800      C     VALMIP        BEGSR                                                                                  12/09/17
+  81900      C*                                                                                                         12/09/17
+  82000      C                   IF        WNUMTE = '99902' AND                                                         12/09/17
+  82100      C                             DBINDE = 450724                                                              12/09/17
+  82200      C     DBINRE        CHAIN     BAFTAB40                                                                     12/09/17
+  82300      C                   IF        %FOUND(BAFTAB40)                                                             12/09/17
+  82400      C                   EVAL      DBINDE = 424994                                                              12/09/17
+  82500      C                   ENDIF                                                                                  12/09/17
+  82600      C                   ENDIF                                                                                  12/09/17
+  82700      C*                                                                                                         07/06/17
+  82800      C                   ENDSR                                                                                  07/06/17
+  82900       /free                                                                                                     01/04/22
+  83000         begsr valbin;                                                                                           01/04/22
+  83100           wdtarjeb = *blanks;                                                                                   01/04/22
+  83200           wrcdcmpb = *blanks;                                                                                   01/04/22
+  83300           wbindesb = *blanks;                                                                                   01/04/22
+  83400           wbinhasb = *blanks;                                                                                   01/04/22
+  83500           wbinpr1b = *blanks;                                                                                   01/04/22
+  83600           wbinpr2b = *blanks;                                                                                   01/04/22
+  83700           wbinpr3b = *blanks;                                                                                   01/04/22
+  83800           wbinpr4b = *blanks;                                                                                   01/04/22
+  83900           wotrcamb = *blanks;                                                                                   01/04/22
+  84000                                                                                                                 01/04/22
+  84100          wdtarjeb = DTARJE;                                                                                     01/04/22
+  84200          CALLP VAL_BIN(wdtarjeb:wrcdcmpb:wbindesb:wbinhasb:wbinpr1b:                                            01/04/22
+  84300                         wbinpr2b:wbinpr3b:wbinpr4b:wotrcamb);                                                   01/04/22
+  84400                                                                                                                 01/04/22
+  84500          if wrcdcmpb <> '0000';                                                                                 01/04/22
+  84600             ICHKT08 = *OFF;                                                                                     01/04/22
+  84700          else;                                                                                                  01/04/22
+  84800            ICHKT08 = *On;                                                                                       01/04/22
+  5770WDS V7R2M0  140418                  LISTADO FUENTE SEU                            08/11/23 09:36:24    DESANEW      PÁG.   17
+  ARCHIVO FUENTE  . . . . .  LMORENO/QRPGLESRC
+  MIEMBRO . . . . . . . . .  CER0100LUZ
+  SEQNBR*...+... 1 ...+... 2 ...+... 3 ...+... 4 ...+... 5 ...+... 6 ...+... 7 ...+... 8 ...+... 9 ...+... 0
+  84900          Endif;                                                                                                 01/04/22
+  85000         endsr;                                                                                                  01/04/22
+  85100       /end-free                                                                                                 01/04/22
+  85200      C*                                                                                                         07/06/17
+  85300      OQPRINT    E            DETA1          1                                                                   20/05/08
+  85400      O                       MNUMTE              21                                                             20/05/08
+                                  * * * *  F I N  D E  F U E N T E  * * * *
