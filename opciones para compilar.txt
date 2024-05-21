@@ -1,0 +1,61 @@
+
+
+14-->F4
+sugeridos para compilar los programas:
+RPGLE:
+Opciones del compilador  . . . . > *NODEBUGIO
+Vistas de depuración . . . . . . > *LIST
+Arreglar numérico  . . . . . . . > *ZONED
+Estos parámetros solo aplican para aquellos programas que usen el CALLP
+Grupo activación por omisión . . > *NO   
+Grupo de activación  . . . . . . > *CALLER
+Modelo de almacenamiento . . . .   *SNGLVL
+ 
+CLLE:
+Vista de depuración  . . . . . .   *LIST
+ 
+DSPF:
+Restaurar pantalla . . . . . . .   *YES
+ 
+PF:
+Máximo de miembros . . . . . . .   *NOMAX
+Número inicial de registros  . > *NOMAX
+Reutilizar regist. suprimidos  .   *YES si son archivos planos colocar *NO
+Comprobación nivel format reg  .   *NO
+ 
+LF:
+Máximo de miembros . . . . . . .   *NOMAX
+Comprobación nivel format reg  .   *NO
+*********************************************************************************
+SP--> VER SPOOL
+5
+CONTROL--> B --> LLEGAR AL FINAL PARA VER ERRORES-- SE BUSCA
+*RNF3522    40  SE METE EL CODIGO DE ERROR CON LETRAS SE IDENTIFICA LA GRAVEDAD DEL ERROR
+SE VA UNO AL INICIO CONTROL : T
+SE PEGA EL CODIGO DE ERROR EN BUSCAR, SE BORRA LA T ANTERIOR
+
+***********************************************************************************
+COLOCARR MARCA EN EL PROGRAMA
+***********************************************************************************
+SHIFT F7 (LAM)
+
+************************************************************************************
+para mirar las modificaciones del programa y serciorarse de que no se cambio nada mas
+*************************************************************************************
+IR AL PRINCIPIO DEL CODIGO
+F2
+BUSCAR POR FECHA 24/05/01
+3 MAYOR QUE
+ENTER
+SHIFT F4 PARA BUSCAR
+
+**********************************************
+F1: MIRAR MENSAJE COMPLETO
+**********************************************
+**********************************************
+JERARQUIA DE COMPILACIÓN
+***********************************************
+PANTALLAS O ARCHIVOS FISICOS
+CL
+RPG
+
