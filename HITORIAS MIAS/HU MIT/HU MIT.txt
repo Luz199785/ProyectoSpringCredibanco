@@ -1,0 +1,74 @@
+
+el ajuste toca hacerlo para las trx de interoperabilidad ADQ y canje electrónico 
+
+El que genera el EXTT es el programa SWR0132
+
+
+CEC1840(CL de referencia--> ESTE NO SE LLAMA EN LOS PROGRAMAS OFICIALES)
+SWC0130(CL principal):
+ 
+Genera EXTT especial para el BBVA y otro proceso para las demas entidades.
+ 
+Archivo base: SWITCH/SWLOPE03  -----> CAMPO DE CLASE DE TRANSACCIÓN (MTPTRA)
+Archivo salida: EXTRACTO(en cada TD00XX) (PLANO)
+ 
+Para BBVA:
+CALL       PGM(SWITCH/SWR0130F) PARM('13')
+ 
+Para todas las entidades:
+CALL       PGM(SISTEMAS/SIC0012) PARM('E')  --> SIR0012 --> SWC0132 --> SWR0132(contruye informacion) --> SWC0136(genera extracto a cada entidad hacia el archivo final)
+
+tiene menú contextual
+
+********************************************************************************************************
+
+informacion de las transacciones MIT
+revisar el programa CER0121 y VQR0121 que son por donde llegan esas transacciones
+
+en el extracto (EXTT) las siguientes posiciones y valores que son entregadas por el EPTA cuando se procesan transacciones de pre autorización y re autorización:
+ 
+*token CH: posición 37 = 2
+
+*token B0 = 3900 (Pre autorización) 
+
+*token 17: Posición 17 a la 20 = 1800 (Pre autorización)
+ 
+ 
+SOLO COMPENSAN LAS
+
+- 1900(confirmacion de la inicial o)
+
+- 1904(confirmacion de la reautorizacion)
+ 
+*token CH: posición 37 = 2
+
+*token B0 = 3904 (Re autorización)
+
+*token 17: Posición 17 a la 20 = 1804 (Re autorización), 1800(preautorizacion o inicial), 1900(confirmacion de la inicial o), 1904(confirmacion de la reautorizacion)
+ 
+EXTT
+
+Esta debe ser marcada en el campo 13 Posiciones 98 – 99 = 11 (inicial, preautorizacion)
+
+Esta debe ser marcada en el campo 13 Posiciones 98 – 99 = 41 (reautorizacion)
+
+Esta debe ser marcada en el campo 13 Posiciones 98 – 99 = 12 (confirmacion de la preautorizacion)
+ 
+ 
+EPTA
+ 
+*token CH: Posición 827
+
+*token B0 = Posición 3290 - 3293
+
+*token 17: Posición 3360 a la 3363
+ 
+ 
+CAET:
+
+para transacciones MIT deben enviarse una marca 'P' para una Confirmacion de una preautorizacion (compra)  -
+
+
+
+
+BEGSR GENTOK

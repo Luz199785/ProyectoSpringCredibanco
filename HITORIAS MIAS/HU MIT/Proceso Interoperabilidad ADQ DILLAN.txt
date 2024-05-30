@@ -1,0 +1,55 @@
+PREPARAR AMBIENTE:
+- Ejecutar CALL LGOMEZ/ADQBORRA
+- Correr SQL
+#1: UPDATE tandem/PTLF_TVQ SET PTLEST = ' '
+WHERE PTLEST = 'P'  
+#2 En caso que se quiera que se procesen transacciones de la WEB DE REVERSOS, ejecutar
+UPDATE ELECTRON/CEFWEBCE SET  DSTREG = ' ', DFHAPL = 'AAAAMMDD',DDIACA = '25', DFHPRO = AAAAMMDD(fecha de proceso)
+WHERE DSTREG = 'P'                                                 
+
+AAAAMMDD (del dia siguiente que se lanza proceso interoperabilidad ADQ) 
+
+                   
+ 
+- CPYF FROMFILE(TANDEM/PTLF_TVQ) TOFILE(SWITCH/SWFEXTVQ) MBROPT(*REPLACE) FMTOPT(*NOCHK)                                                                                    
+
+EJECUCION
+- Ejecutar menu CALL VQC0100   - SOMETIDO  /  CALL BASEDOS/VQC0100PRU   -- INTERACTIVO
+  OPCION #1 Y OPCION #2
+
+- Sugerencia: Ejecutar Opc 1, 2 y 5
+
+
+13786389
+19360957
+************ IMPORTANTE:
+
+en caso que no salga el proceso en ejecución revisar que el archivo vqfcntr0 no tenga el valor 'D' en el campo DCNACT
+
+#1:
+SQL: update BASEDOS/vqfcntr0 SET DCNACT = 'P'
+WHERE DCNACT = 'D'                      
+
+#2: si sale el mensaje "SG('El VQC0108 proceso esta en ejecución por favor espere 10  Minutos para volvera a intentar.'             
+CHGDTAARA  DTAARA(BASEDOS/VQPROCAUTO (1 2)) VALUE(OK)
+
+
+******* INFORMACION ADICIONAL DEL PROCESO *****************
+
+vqr0106 - 
+vqr0140 - recupera la adenda para outgoing
+
+busca 350c y 350q y lo completa para el outgoing
+
+220624
+
+CALL PGM(BASEDOS/VQC0108) PARM('M' 220624 ' ' ' ')
+CALL       PGM(BASEDOS/VQR0830)
+
+       --->   SALIDAS   <---
+
+OUTCTVQPR --> M. ASOCIADOS
+OUTCTVQAS --> M. PRINCIPALS
+OUTCTFVQ --> union de las anteriores- de trabajo
+
+

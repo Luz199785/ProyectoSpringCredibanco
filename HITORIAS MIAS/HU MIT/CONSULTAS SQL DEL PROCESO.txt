@@ -1,0 +1,36 @@
+update pgp1589/ptlsv0420 set                                     
+ptlf_det =                                                       
+substr(ptlf_det, 1 , 3359)||'1904'||substr(ptlf_det, 3364, 581)  
+where substr(ptlf_det, 98, 8) = '000ALSWX'                       
+-------------------------------------------------------------
+select * from pgp1589/ptlsv0420 where substr(ptlf_det, 98, 8) =  
+'000B3TTG'                                                       
+-------------------------------------------------------------
+select substr(ptlf_det, 3360, 4) MIT ,substr(ptlf_det, 98, 8) TERM ,
+substr(ptlf_det, 361, 2) DTPTRA ,substr(ptlf_det, 827, 1), count(*) 
+ from pgp1589/ptlsv0420 where substr(ptlf_det, 3360, 4) not in (    
+'0000','    ')                                                      
+group by substr(ptlf_det, 3360, 4),substr(ptlf_det, 98, 8),         
+         substr(ptlf_det, 361, 2),substr(ptlf_det, 827, 1)          
+order by substr(ptlf_det, 3360, 4
+----------------------------------------------------------------
+EPTA
+select substr(F1, 3360, 4) MIT ,substr(F1, 98, 8) TERM ,            
+substr(F1, 361, 2) DTPTRA ,substr(F1, 827, 1), count(*)             
+                                                                    
+         FROM PGP1589/EPTA0503                                      
+        group by                                                    
+ substr(F1, 3360, 4) ,substr(F1, 98, 8) ,                           
+substr(F1, 361, 2) ,substr(F1, 827, 1)                              
+----------------------------------------------------------------
+BUSCAR EN EL EXTRACTO EL TIPO 12 Y COPIO EL NUMERO DE TARJETA SE DESCUENTAN LOS TRES ULTIMOS NUMEROS PARA LA CONSULTA DESPUES DE ESTA
+
+SELECT SUBSTR(EXTRACTO, 98, 2) AS "SUBSTR(EXTRACTO, 98, 2)"    
+, A.* FROM TD0051/EXTRACTO A
+---------------------------------------------------------------
+BUSCAR EN EL CEF0300A LA TRX ANTERIOR CON NUMERO DE TARJETA:
+
+SELECT * FROM CEF0300A WHERE D3ARJE LIKE '%123456789101112'= 16
+                                           12345678910111213141516171819 TARJETA ORIGINAL = 19 SE LE RESTAN LOS ULTIMOS 3 NUMEROS PARA QUE DE 16
+--------------------------------------------------------------------
+
